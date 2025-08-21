@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../service/loginService";
 
-export default function Login({ setUserRole }) {
+export default function Login({setRole}) {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const navigate = useNavigate();
 
@@ -13,15 +14,16 @@ export default function Login({ setUserRole }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) throw new Error('Login failed');
-      const data = await response.json();
+      const data = await loginUser(formData.username,formData.password);
+      console.log(data);
       const role = data.role;
-      setUserRole(role);
+
+      localStorage.setItem("username",formData.username);
+      localStorage.setItem("password",formData.password);
+      
+      localStorage.setItem("role",role);
+      console.log("User Logged in with role : " +role);
+      setRole(role);
       navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
@@ -30,25 +32,30 @@ export default function Login({ setUserRole }) {
   };
 
   return (
-    <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', width: '200px' }}>
-      <input
-        name="username"
-        value={formData.username}
-        onChange={handleInputChange}
-        placeholder="Username"
-        required
-        style={{ marginBottom: '10px', padding: '6px' }}
-      />
-      <input
-        name="password"
-        type="password"
-        value={formData.password}
-        onChange={handleInputChange}
-        placeholder="Password"
-        required
-        style={{ marginBottom: '10px', padding: '6px' }}
-      />
-      <button type="submit" style={{ padding: '6px' }}>Login</button>
+    <form onSubmit={handleLogin} className="container mt-5" style={{ maxWidth: '400px' }}>
+      <h2>Login</h2>
+      <div className="mb-3">
+        <input
+          name="username"
+          value={formData.username}
+          onChange={handleInputChange}
+          placeholder="Username"
+          required
+          className="form-control"
+        />
+      </div>
+      <div className="mb-3">
+        <input
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleInputChange}
+          placeholder="Password"
+          required
+          className="form-control"
+        />
+      </div>
+      <button type="submit" className="btn btn-primary w-100">Login</button>
     </form>
   );
 }

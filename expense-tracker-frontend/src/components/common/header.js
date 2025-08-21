@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 
-const Header = ({ userRole }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Header = ({role,setRole}) => {
   const navigate = useNavigate();
   
-  const role = userRole || 'guest';
+  
+  useEffect(()=>{
+    const currentRole = localStorage.getItem("role");
+    setRole(currentRole);
+  },[navigate])
+ 
+  const handleLogOut = () => {
+    localStorage.setItem("role","ROLE_GUEST")
+    setRole("ROLE_GUEST")
+    navigate('/login')
+  }
 
   const getPath = (item) => {
     const paths = {
@@ -23,118 +32,68 @@ const Header = ({ userRole }) => {
 
   return (
     <nav>
-      <div 
-        onClick={() => setIsOpen(!isOpen)} 
-        style={{ cursor: 'pointer', fontWeight: 'bold', marginBottom: '8px' }}
-      >
-        Expense Tracker
-      </div>
+      <div className="text-light bg-dark p-3 d-flex justify-content-evenly align-content-center">
+        <h2>Expense Tracker</h2>
+      
 
-      {isOpen && role === 'ROLE_EMPLOYEE' && (
-        <div>
+      {role === 'ROLE_EMPLOYEE' && (
+         <div className='d-flex gap-3 ms-2 me-2'>
           {['HOME', 'MY SUBMISSIONS', 'HISTORY'].map(item => (
-            <div key={item} style={{ marginBottom: '6px' }}>
+            <div key={item} >
               <NavLink
                 to={getPath(item)}
                 end={item === 'HOME'}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
-                style={{ textDecoration: 'none', color: 'black' }}
+                style={{ textDecoration: 'none', color: 'white' }}
               >
                 {item}
               </NavLink>
             </div>
           ))}
-          <div>
+          
+        </div>
+      )}
+
+      {role === 'ROLE_MANAGER' && (
+         <div className='d-flex gap-3 ms-2 me-2'>
+          {['DASHBOARD', 'VIEW SUBMISSIONS'].map(item => (
+            <div key={item} style={{ marginBottom: '6px' }}>
+              <NavLink
+                to={getPath(item)}
+                end={item === 'HOME'}
+                style={{ textDecoration: 'none', color: 'white' }}
+              >
+                {item}
+              </NavLink>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {role === 'ROLE_ADMIN' && (
+        <div className='d-flex gap-3 ms-2 me-2'>
+          {['HOME', 'DASHBOARD',  'VIEW SUBMISSIONS', 'REPORTS', 'ADD MEMBER'].map(item => (
+            <div key={item} style={{ marginBottom: '6px' }}>
+              <NavLink
+                to={getPath(item)}
+                end={item === 'HOME'}
+                style={{ textDecoration: 'none', color: 'white' }}
+              >
+                {item}
+              </NavLink>
+            </div>
+          ))}
+          
+        </div>
+      )}
+        <div>
             <span
-              onClick={() => {
-                setIsOpen(false);
-                console.log('Logout clicked');
-                navigate('/login')
-              }}
+              onClick={handleLogOut}
               style={{ cursor: 'pointer', color: 'red' }}
             >
               SIGNOUT
             </span>
           </div>
-        </div>
-      )}
-
-      {isOpen && role === 'ROLE_MANAGER' && (
-        <div>
-          {['HOME', 'DASHBOARD', 'VIEW SUBMISSIONS', 'REPORTS'].map(item => (
-            <div key={item} style={{ marginBottom: '6px' }}>
-              <NavLink
-                to={getPath(item)}
-                end={item === 'HOME'}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
-                style={{ textDecoration: 'none', color: 'black' }}
-              >
-                {item}
-              </NavLink>
-            </div>
-          ))}
-          <div>
-            <span
-              onClick={() => {
-                setIsOpen(false);
-                console.log('Logout clicked');
-              }}
-              style={{ cursor: 'pointer', color: 'red' }}
-            >
-              SIGNOUT
-            </span>
-          </div>
-        </div>
-      )}
-
-      {isOpen && role === 'ROLE_ADMIN' && (
-        <div>
-          {['HOME', 'DASHBOARD', 'MY SUBMISSIONS', 'VIEW SUBMISSIONS', 'REPORTS', 'HISTORY', 'ADD MEMBER'].map(item => (
-            <div key={item} style={{ marginBottom: '6px' }}>
-              <NavLink
-                to={getPath(item)}
-                end={item === 'HOME'}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
-                style={{ textDecoration: 'none', color: 'black' }}
-              >
-                {item}
-              </NavLink>
-            </div>
-          ))}
-          <div>
-            <span
-              onClick={() => {
-                setIsOpen(false);
-                console.log('Logout clicked');
-              }}
-              style={{ cursor: 'pointer', color: 'red' }}
-            >
-              SIGNOUT
-            </span>
-          </div>
-        </div>
-      )}
-
-      {isOpen && role === 'guest' && (
-        <div>
-          {['HOME', 'LOGIN'].map(item => (
-            <div key={item} style={{ marginBottom: '6px' }}>
-              <NavLink
-                to={getPath(item)}
-                end={item === 'HOME'}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
-                style={{ textDecoration: 'none', color: 'black' }}
-              >
-                {item}
-              </NavLink>
-            </div>
-          ))}
-        </div>
-      )}
+       </div>
     </nav>
   );
 };
