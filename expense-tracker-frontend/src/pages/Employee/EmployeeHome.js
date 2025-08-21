@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
 import {addExpense, fetchCategories} from "../../service/expenseService";
 import { getUser } from "../../service/loginService";
-import { data } from "react-router-dom";
+
 function EmployeeHome() {
     
     const [categories,setCategories] = useState([])
@@ -34,6 +34,8 @@ function EmployeeHome() {
     useEffect(()=>{
         if(dataCollected){
             addExpense(formData)
+                        .then(()=>alert("Expense Creation Succesful"))
+                        .catch(e=>alert(e))
         }
         setFormData({
             categoryId: '',
@@ -87,6 +89,7 @@ function EmployeeHome() {
                     id="categoryId"
                     name="categoryId"
                     onChange={handleChange}
+                    value={formData.categoryId}
                     required
                     className="form-select"
                     >
@@ -101,12 +104,12 @@ function EmployeeHome() {
 
             <div className="mb-3">
                 <label htmlFor="amount" className="form-label">Expense Amount</label>
-                <input type="text" id="amount" name="amount" onChange={handleChange} className="form-control" />
+                <input type="text" id="amount" name="amount" value={formData.amount} onChange={handleChange} className="form-control" />
             </div>
 
             <div className="mb-3">
                 <label htmlFor="description" className="form-label">Description</label>
-                <input type="text" name="description" id="description" onChange={handleChange} className="form-control" />
+                <input type="text" name="description" id="description" value={formData.description} onChange={handleChange} className="form-control" />
             </div>
             <button type="submit" className="btn btn-primary w-100">Submit</button>
         </form>

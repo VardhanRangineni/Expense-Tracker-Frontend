@@ -18,8 +18,7 @@ export const fetchCategories = async (username,password) =>{
 export const addExpense = async (formData) =>{
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
-
-    console.log(formData);
+    
     const response = await fetch(baseURL+'/api/expenses/addexpense' , {
         method: "POST",
         headers: {
@@ -30,8 +29,8 @@ export const addExpense = async (formData) =>{
     });
     
     if(!response.ok){
-        console.log(response);
         throw new Error('Could not Add a new expense');
     }
+
     return response;
 }
