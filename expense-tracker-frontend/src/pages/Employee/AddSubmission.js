@@ -1,9 +1,8 @@
 import { useState,useEffect } from "react";
 import {addExpense, fetchCategories} from "../../service/expenseService";
 import { getUser } from "../../service/loginService";
-import EditMySubmission from "./EditMySubmission";
 
-function EmployeeHome() {
+function AddSubmission() {
     
     const [categories,setCategories] = useState([])
     const [dataCollected , setDataCollected] = useState(false);
@@ -118,4 +117,4 @@ function EmployeeHome() {
     );
 }
 
-export default EmployeeHome;
+export default AddSubmission;

@@ -26,29 +26,33 @@ const ManagerSubmissions = () => {
       }
       setLoading(false);
     };
+    
     loadSubmissions();
-  }, [username, password, managerId]);
+  }, []);
 
   const handleRemarksChange = (expenseId, value) => {
     setRemarksMap(prev => ({ ...prev, [expenseId]: value }));
   };
 
-  const handleUpdateStatus = async (expenseId, status) => {
+  const handleUpdateStatus = async (sub, status) => {
     try {
-      const expense = submissions.find(sub => sub.id === expenseId);
+      const expense = sub
       if (!expense) {
         alert("Expense not found!");
         return;
       }
       const updatedExpense = {
         ...expense,
-        remarks: remarksMap[expenseId] || "",
+        remarks: remarksMap[expense.id] || "",
         managerId: parseInt(managerId),
       };
-      await updateExpenseStatus(username, password, expenseId, status, updatedExpense);
+      const res = await updateExpenseStatus(username, password, expense.id, status, updatedExpense);
+      
       alert(`Expense ${status.toLowerCase()} successfully`);
-      const data = await fetchTeamSubmissions(username, password, managerId, null);
-      setSubmissions(data);
+      fetchTeamSubmissions(username, password, managerId, null)
+          .then((data)=>setSubmissions(data))
+          .catch((e)=>console.log(e));
+
     } catch (err) {
       alert(err.message);
     }
@@ -99,13 +103,13 @@ const ManagerSubmissions = () => {
                 {sub.status === "PENDING" ? (
                   <>
                     <button
-                      onClick={() => handleUpdateStatus(sub.id, "APPROVED")}
+                      onClick={() => handleUpdateStatus(sub, "APPROVE")}
                       className="btn btn-success btn-sm me-2"
                     >
                       Approve
                     </button>
                     <button
-                      onClick={() => handleUpdateStatus(sub.id, "REJECTED")}
+                      onClick={() => handleUpdateStatus(sub, "REJECT")}
                       className="btn btn-danger btn-sm"
                     >
                       Reject

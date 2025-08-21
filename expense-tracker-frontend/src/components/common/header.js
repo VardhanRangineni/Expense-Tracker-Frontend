@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react';
-import { Navigate, NavLink, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import {  NavLink, useNavigate } from 'react-router-dom';
 
 const Header = ({role,setRole}) => {
   const navigate = useNavigate();
@@ -11,16 +11,18 @@ const Header = ({role,setRole}) => {
   },[navigate])
  
   const handleLogOut = () => {
-    localStorage.setItem("role","ROLE_GUEST")
-    setRole("ROLE_GUEST")
+    localStorage.clear()
+    localStorage.setItem("role","ROLE_ANONYMOUS")
+   
+    setRole("ROLE_ANONYMOUS")
     navigate('/login')
   }
 
   const getPath = (item) => {
     const paths = {
-      'HOME': '/',
       'DASHBOARD': '/dashboard',
       'MY SUBMISSIONS': '/my-submissions',
+      'ADD EXPENSE':'/add-submission',
       'VIEW SUBMISSIONS': '/view-submissions',
       'REPORTS': '/reports',
       'HISTORY': '/history',
@@ -38,7 +40,7 @@ const Header = ({role,setRole}) => {
 
       {role === 'ROLE_EMPLOYEE' && (
          <div className='d-flex gap-3 ms-2 me-2'>
-          {['HOME', 'MY SUBMISSIONS'].map(item => (
+          {['DASHBOARD', 'MY SUBMISSIONS','ADD EXPENSE'].map(item => (
             <div key={item} >
               <NavLink
                 to={getPath(item)}
@@ -85,6 +87,7 @@ const Header = ({role,setRole}) => {
           
         </div>
       )}
+      { role!=="ROLE_ANONYMOUS" &&
         <div>
             <span
               onClick={handleLogOut}
@@ -92,8 +95,10 @@ const Header = ({role,setRole}) => {
             >
               SIGNOUT
             </span>
-          </div>
+        </div>
+      } 
        </div>
+      
     </nav>
   );
 };
