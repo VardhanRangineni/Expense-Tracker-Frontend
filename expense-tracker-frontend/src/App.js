@@ -5,8 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Header from './components/common/header';
 import Login from './pages/login';
-import Dashboard from './pages/Dashboard';
 import EmployeeHome from './pages/Employee/EmployeeHome';
+import MySubmissions from './pages/my-submissions';
 
 function App() {
   
@@ -25,7 +25,8 @@ function App() {
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/login" element={<Login setRole={setCurrRole}/>} />
           <Route path="/dashboard" element={currRole=="ROLE_EMPLOYEE"? <EmployeeHome /> : <Navigate to="/login"/>} />
-          
+          <Route path="/my-submissions" element={currRole=="ROLE_EMPLOYEE"? <MySubmissions /> : <Navigate to="/login"/>} />
+          <Route path='/viewsubmissions' element={currRole=="ROLE_MANAGER"}?<View
         </Routes>
     </Router>
   );
