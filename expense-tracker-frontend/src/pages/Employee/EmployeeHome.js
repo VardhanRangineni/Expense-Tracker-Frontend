@@ -1,12 +1,13 @@
 import { useState,useEffect } from "react";
 import {addExpense, fetchCategories} from "../../service/expenseService";
 import { getUser } from "../../service/loginService";
+import { data } from "react-router-dom";
 function EmployeeHome() {
     
     const [categories,setCategories] = useState([])
+    const [dataCollected , setDataCollected] = useState(false);
 
-
-
+    
     const [formData, setFormData] = useState({
         categoryId: '',
         amount: 0,
@@ -16,9 +17,6 @@ function EmployeeHome() {
     });
     
 
-    //Fetch Categories from backend and populate 
-    //Fetch User expediture for this month
-    //Then send the New submission
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -33,6 +31,21 @@ function EmployeeHome() {
         fetchData();
     }, []);
 
+    useEffect(()=>{
+        if(dataCollected){
+            addExpense(formData)
+        }
+        setFormData({
+            categoryId: '',
+            amount: 0,
+            description:'',
+            managerId:0,
+            employeeId:0
+        })
+        setDataCollected(false);
+    },[dataCollected])
+
+
     const handleChange = (e) =>{
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -41,26 +54,27 @@ function EmployeeHome() {
         }));
     }
 
+
     const handleSubmit= async (e)=>{
         e.preventDefault();
-
+    
         const username = localStorage.getItem("username");
         const password = localStorage.getItem("password");
         
-
+    
         const userDetails = await getUser(username,password);
         
         console.log(userDetails.managerId,userDetails.id);
-
+    
         setFormData(prev => ({
             ...prev,
             managerId: userDetails.managerId,
             employeeId : userDetails.id
         }));
 
-        
-        addExpense(formData);
+        setDataCollected(true);
     }
+    
 
     return (
     <div>
@@ -96,7 +110,7 @@ function EmployeeHome() {
             </div>
             <button type="submit" className="btn btn-primary w-100">Submit</button>
         </form>
-
+    
     </div>
     );
 }

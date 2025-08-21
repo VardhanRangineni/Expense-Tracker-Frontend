@@ -26,9 +26,7 @@ export const addExpense = async (formData) =>{
             "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json"
         },
-        body: {
-            formData
-        }
+        body:JSON.stringify(formData)
     });
     
     if(!response.ok){
