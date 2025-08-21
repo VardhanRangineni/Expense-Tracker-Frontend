@@ -1,32 +1,58 @@
 import React, { useEffect, useState } from "react";
 import { fetchMySubmissions } from "../../service/mysubmissionsService";
+import EditMySubmission from "./EditMySubmission";
+import { fetchCategories } from "../../service/expenseService";
 
 function MySubmissions() {
   const [submissions, setSubmissions] = useState([]);
+  const [remarksMap, setRemarksMap] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingSubmission ,setEditingSubmission] = useState({});
 
-  useEffect(() => {
+  useEffect(() => { 
     const fetchSubs = async () => {
       try {
         const username = localStorage.getItem("username");
         const password = localStorage.getItem("password");
         const userId = localStorage.getItem("userId");
         const res = await fetchMySubmissions(username, password, userId);
+        const categories = await fetchCategories();
+
+        //The submission (expense) object doesnt have category name but on categoryID so populating categorynames manually
+        res.map(sub => {
+          categories.map((category)=>{
+            if(sub.categoryId == category.id)
+              sub.categoryName = category.name;
+          })
+        });
+
+
         setSubmissions(res);
       } catch (error) {
         alert(error);
       } finally {
         setLoading(false);
       }
+      setLoading(false);
     };
-    fetchSubs();
-  }, []);
+    if(!isEditing){
+      fetchSubs();
+    }
+  },[isEditing]);
+
+  const onClose = () =>{
+    setIsEditing(false);
+  }
 
   return (
     <div>
+      {isEditing && <EditMySubmission currentSubmission={editingSubmission} onClose={onClose}/>}
+
+
       <h2>My Expense Submissions</h2>
       {loading ? (
-        <p>Loading...</p>
+        <p>Ltoading...</p>
       ) : submissions.length === 0 ? (
         <p>No submissions yet!</p>
       ) : (
@@ -46,7 +72,7 @@ function MySubmissions() {
             {submissions.map(sub => (
               <tr key={sub.id}>
                 <td>{sub.description}</td>
-                <td>{sub.categoryId}</td>
+                <td>{sub.categoryName}</td>
                 <td>{sub.amount}</td>
                 <td>{sub.date}</td>
                 <td>{sub.status}</td>
@@ -54,8 +80,8 @@ function MySubmissions() {
                 <td>
                   {sub.status === "PENDING" ? (
                     <>
-                      <button className="btn btn-sm btn-secondary" disabled>Edit</button>
-                      <button className="btn btn-sm btn-danger ms-2" disabled>Delete</button>
+                      <button className="btn btn-sm btn-secondary" onClick={()=>{setIsEditing(true); setEditingSubmission(sub)}}>Edit</button>
+                      <button className="btn btn-sm btn-danger ms-2">Delete</button>
                     </>
                   ) : (
                     <span>-</span>
@@ -68,5 +94,6 @@ function MySubmissions() {
       )}
     </div>
   );
-}
+};
+
 export default MySubmissions;

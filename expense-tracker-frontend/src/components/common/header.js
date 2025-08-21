@@ -38,7 +38,7 @@ const Header = ({role,setRole}) => {
 
       {role === 'ROLE_EMPLOYEE' && (
          <div className='d-flex gap-3 ms-2 me-2'>
-          {['HOME', 'MY SUBMISSIONS', 'HISTORY'].map(item => (
+          {['HOME', 'MY SUBMISSIONS'].map(item => (
             <div key={item} >
               <NavLink
                 to={getPath(item)}

@@ -1,6 +1,8 @@
 const baseURL = "http://localhost:8080"
 
-export const fetchCategories = async (username,password) =>{
+export const fetchCategories = async () =>{
+    const username = localStorage.getItem("username");
+    const password = localStorage.getItem("password");
     const response = await fetch(baseURL+'/api/expenses/categories' , {
         method: "GET",
         headers: {
