@@ -1,7 +1,7 @@
 const baseURL = "http://localhost:8080";
 
 export const fetchTeamSubmissions = async (username, password, managerId, status) => {
-  let url = `${baseURL}/api/expenses/manager/${managerId}`;
+  let url = `${baseURL}/api/manager/expenses/${managerId}`;
   if (status) {
     url += `?status=${encodeURIComponent(status)}`;
   }
@@ -18,14 +18,14 @@ export const fetchTeamSubmissions = async (username, password, managerId, status
   return await response.json();
 };
 
-export const updateExpenseStatus = async (username, password, expenseId, { managerId, status, remarks }) => {
-  const response = await fetch(`${baseURL}/api/expenses/${expenseId}/${status.toLowerCase()}`, {
+export const updateExpenseStatus = async (username, password, expenseId, status, expense) => {
+  const response = await fetch(`${baseURL}/api/manager/expenses/${expenseId}/${status.toLowerCase()}`, {
     method: "PUT",
     headers: {
       "Authorization": "Basic " + btoa(`${username}:${password}`),
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ managerId, remarks }),
+    body: JSON.stringify(expense),
   });
   if (!response.ok) {
     throw new Error(`Failed to ${status.toLowerCase()} expense`);

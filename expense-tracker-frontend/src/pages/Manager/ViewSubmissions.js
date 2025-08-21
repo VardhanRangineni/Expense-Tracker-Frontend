@@ -35,11 +35,17 @@ const ManagerSubmissions = () => {
 
   const handleUpdateStatus = async (expenseId, status) => {
     try {
-      await updateExpenseStatus(username, password, expenseId, {
-        managerId: parseInt(managerId),
-        status: status,
+      const expense = submissions.find(sub => sub.id === expenseId);
+      if (!expense) {
+        alert("Expense not found!");
+        return;
+      }
+      const updatedExpense = {
+        ...expense,
         remarks: remarksMap[expenseId] || "",
-      });
+        managerId: parseInt(managerId),
+      };
+      await updateExpenseStatus(username, password, expenseId, status, updatedExpense);
       alert(`Expense ${status.toLowerCase()} successfully`);
       const data = await fetchTeamSubmissions(username, password, managerId, null);
       setSubmissions(data);
@@ -63,6 +69,7 @@ const ManagerSubmissions = () => {
             <th>Amount</th>
             <th>Date</th>
             <th>Status</th>
+            <th>Employee</th>
             <th>Add Remarks</th>
             <th>Actions</th>
           </tr>
@@ -71,10 +78,11 @@ const ManagerSubmissions = () => {
           {submissions.map(sub => (
             <tr key={sub.id}>
               <td>{sub.description}</td>
-              <td>{sub.categoryId}</td>
+              <td>{sub.categoryName || sub.categoryId}</td>
               <td>{sub.amount}</td>
               <td>{sub.date}</td>
               <td>{sub.status}</td>
+              <td>{sub.employeeName || sub.employeeId}</td>
               <td>
                 {sub.status === "PENDING" ? (
                   <input
@@ -91,13 +99,13 @@ const ManagerSubmissions = () => {
                 {sub.status === "PENDING" ? (
                   <>
                     <button
-                      onClick={() => handleUpdateStatus(sub.id, "APPROVE")}
+                      onClick={() => handleUpdateStatus(sub.id, "APPROVED")}
                       className="btn btn-success btn-sm me-2"
                     >
                       Approve
                     </button>
                     <button
-                      onClick={() => handleUpdateStatus(sub.id, "REJECT")}
+                      onClick={() => handleUpdateStatus(sub.id, "REJECTED")}
                       className="btn btn-danger btn-sm"
                     >
                       Reject
