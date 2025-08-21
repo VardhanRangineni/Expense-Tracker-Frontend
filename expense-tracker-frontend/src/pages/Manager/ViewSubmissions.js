@@ -1,72 +1,118 @@
 import React, { useEffect, useState } from "react";
-import { fetchMySubmissions } from "../../service/viewsubmissionsService";
+import { fetchTeamSubmissions, updateExpenseStatus } from "../../service/viewsubmissionsService";
 
-function ViewSubmissions() {
+const ManagerSubmissions = () => {
   const [submissions, setSubmissions] = useState([]);
+  const [remarksMap, setRemarksMap] = useState({});
   const [loading, setLoading] = useState(true);
 
+  const username = localStorage.getItem("username");
+  const password = localStorage.getItem("password");
+  const managerId = localStorage.getItem("userId");
+
   useEffect(() => {
-    const fetchSubs = async () => {
+    const loadSubmissions = async () => {
+      setLoading(true);
       try {
-        const username = localStorage.getItem("username");
-        const password = localStorage.getItem("password");
-        const userId = localStorage.getItem("userId");
-        const res = await fetchViewSubmissions(username, password, userId);
-        setSubmissions(res);
-      } catch (error) {
-        alert(error);
-      } finally {
-        setLoading(false);
+        const data = await fetchTeamSubmissions(username, password, managerId, null);
+        setSubmissions(data);
+        const initRemarks = {};
+        data.forEach(item => {
+          initRemarks[item.id] = item.remarks || "";
+        });
+        setRemarksMap(initRemarks);
+      } catch (err) {
+        alert(err.message);
       }
+      setLoading(false);
     };
-    fetchSubs();
-  }, []);
+    loadSubmissions();
+  }, [username, password, managerId]);
+
+  const handleRemarksChange = (expenseId, value) => {
+    setRemarksMap(prev => ({ ...prev, [expenseId]: value }));
+  };
+
+  const handleUpdateStatus = async (expenseId, status) => {
+    try {
+      await updateExpenseStatus(username, password, expenseId, {
+        managerId: parseInt(managerId),
+        status: status,
+        remarks: remarksMap[expenseId] || "",
+      });
+      alert(`Expense ${status.toLowerCase()} successfully`);
+      const data = await fetchTeamSubmissions(username, password, managerId, null);
+      setSubmissions(data);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+
+  if (submissions.length === 0) return <div>No submissions found.</div>;
 
   return (
-    <div>
-      <h2>My Expense Submissions</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : submissions.length === 0 ? (
-        <p>No submissions yet!</p>
-      ) : (
-        <table className="table table-bordered table-hover">
-          <thead>
-            <tr>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Remarks</th>
-              <th>Manasu Marchukuna</th>
+    <div className="container mt-3">
+      <h3>Team Expense Submissions</h3>
+      <table className="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Add Remarks</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {submissions.map(sub => (
+            <tr key={sub.id}>
+              <td>{sub.description}</td>
+              <td>{sub.categoryId}</td>
+              <td>{sub.amount}</td>
+              <td>{sub.date}</td>
+              <td>{sub.status}</td>
+              <td>
+                {sub.status === "PENDING" ? (
+                  <input
+                    type="text"
+                    value={remarksMap[sub.id] || ""}
+                    onChange={e => handleRemarksChange(sub.id, e.target.value)}
+                    className="form-control"
+                  />
+                ) : (
+                  sub.remarks || "No Remarks"
+                )}
+              </td>
+              <td>
+                {sub.status === "PENDING" ? (
+                  <>
+                    <button
+                      onClick={() => handleUpdateStatus(sub.id, "APPROVE")}
+                      className="btn btn-success btn-sm me-2"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => handleUpdateStatus(sub.id, "REJECT")}
+                      className="btn btn-danger btn-sm"
+                    >
+                      Reject
+                    </button>
+                  </>
+                ) : (
+                  "-"
+                )}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {submissions.map(sub => (
-              <tr key={sub.id}>
-                <td>{sub.description}</td>
-                <td>{sub.categoryId}</td>
-                <td>{sub.amount}</td>
-                <td>{sub.date}</td>
-                <td>{sub.status}</td>
-                <td>{sub.remarks || "---"}</td>
-                <td>
-                  {sub.status === "PENDING" ? (
-                    <>
-                      <button className="btn btn-sm btn-secondary" disabled>Edit</button>
-                      <button className="btn btn-sm btn-danger ms-2" disabled>Delete</button>
-                    </>
-                  ) : (
-                    <span>-</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-}
-export default MySubmissions;
+};
+
+export default ManagerSubmissions;

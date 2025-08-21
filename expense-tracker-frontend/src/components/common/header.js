@@ -21,7 +21,7 @@ const Header = ({role,setRole}) => {
       'HOME': '/',
       'DASHBOARD': '/dashboard',
       'MY SUBMISSIONS': '/my-submissions',
-      'VIEW SUBMISSIONS': '/view-submissions',
+      'VIEW SUBMISSIONS': '/ViewSubmissions',
       'REPORTS': '/reports',
       'HISTORY': '/history',
       'ADD MEMBER': '/add-member',
