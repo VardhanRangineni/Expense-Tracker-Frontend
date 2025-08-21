@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchMySubmissions } from "../service/viewsubmissionsService";
+import { fetchMySubmissions } from "../../service/viewsubmissionsService";
 
 function ViewSubmissions() {
   const [submissions, setSubmissions] = useState([]);
@@ -11,7 +11,7 @@ function ViewSubmissions() {
         const username = localStorage.getItem("username");
         const password = localStorage.getItem("password");
         const userId = localStorage.getItem("userId");
-        const res = await fetchMySubmissions(username, password, userId);
+        const res = await fetchViewSubmissions(username, password, userId);
         setSubmissions(res);
       } catch (error) {
         alert(error);

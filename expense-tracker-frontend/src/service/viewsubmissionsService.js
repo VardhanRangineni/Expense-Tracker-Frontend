@@ -1,7 +1,7 @@
 const baseURL = "http://localhost:8080";
 
 export const fetchMySubmissions = async (username, password, userId) => {
-  const response = await fetch(`${baseURL}/api/expenses/manager/${managerId}`, {
+  const response = await fetch(`${baseURL}/api/expenses/manager/${userId}`, {
     method: "GET",
     headers: {
       "Authorization": "Basic " + btoa(`${username}:${password}`),

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchMySubmissions } from "../service/mysubmissionsService";
+import { fetchMySubmissions } from "../../service/mysubmissionsService";
 
 function MySubmissions() {
   const [submissions, setSubmissions] = useState([]);
