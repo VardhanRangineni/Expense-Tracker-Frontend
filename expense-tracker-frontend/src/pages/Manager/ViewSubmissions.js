@@ -72,8 +72,8 @@ const ManagerSubmissions = () => {
   return (
     <div className="container mt-3">
       <h3>Team Expense Submissions</h3>
-      <table className="table table-bordered table-striped">
-        <thead>
+      <table className="table table-striped">
+        <thead className="table-dark">
           <tr>
             <th>Description</th>
             <th>Category</th>
