@@ -36,23 +36,30 @@ const ManagerSubmissions = () => {
 
   const handleUpdateStatus = async (sub, status) => {
     try {
-      const expense = sub
+      const expense = sub;
       if (!expense) {
         alert("Expense not found!");
         return;
       }
+      let remark = remarksMap[expense.id] || "";
+      if (status === "REJECT" && remark.trim() === "") {
+        alert("You cannot REJECT the Submission With out a REMARK.");
+        return;
+      }
+      if (status === "APPROVE" && remark.trim() === "") {
+        remark = "NO REMARK";
+      }
       const updatedExpense = {
         ...expense,
-        remarks: remarksMap[expense.id] || "",
+        remarks: remark,
         managerId: parseInt(managerId),
       };
       const res = await updateExpenseStatus(username, password, expense.id, status, updatedExpense);
-      
+
       alert(`Expense ${status.toLowerCase()} successfully`);
       fetchTeamSubmissions(username, password, managerId, null)
-          .then((data)=>setSubmissions(data))
-          .catch((e)=>console.log(e));
-
+        .then((data) => setSubmissions(data))
+        .catch((e) => console.log(e));
     } catch (err) {
       alert(err.message);
     }
@@ -96,7 +103,7 @@ const ManagerSubmissions = () => {
                     className="form-control"
                   />
                 ) : (
-                  sub.remarks || "No Remarks"
+                  sub.remarks
                 )}
               </td>
               <td>
@@ -114,6 +121,7 @@ const ManagerSubmissions = () => {
                     >
                       Reject
                     </button>
+                  
                   </>
                 ) : (
                   "-"
