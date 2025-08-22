@@ -30,5 +30,5 @@ export const updateExpenseStatus = async (username, password, expenseId, status,
   if (!response.ok) {
     throw new Error(`Failed to ${status.toLowerCase()} expense`);
   }
-  return response;
+  return await response.json();
 };

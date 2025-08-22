@@ -56,7 +56,8 @@ const ManagerSubmissions = () => {
       };
       const res = await updateExpenseStatus(username, password, expense.id, status, updatedExpense);
 
-      alert(`Expense ${status.toLowerCase()} successfully`);
+      alert(res.message);
+      
       fetchTeamSubmissions(username, password, managerId, null)
         .then((data) => setSubmissions(data))
         .catch((e) => console.log(e));
