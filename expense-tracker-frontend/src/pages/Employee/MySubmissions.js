@@ -59,18 +59,18 @@ function MySubmissions() {
     }
 
   return (
-    <div>
+    <div className="container mt-3">
       {isEditing && <EditMySubmission currentSubmission={editingSubmission} onClose={onClose}/>}
 
 
       <h2>My Expense Submissions</h2>
       {loading ? (
-        <p>Ltoading...</p>
+        <p>Loading...</p>
       ) : submissions.length === 0 ? (
         <p>No submissions yet!</p>
       ) : (
-        <table className="table table-bordered table-hover">
-          <thead>
+        <table className="table table-striped">
+           <thead className="table-dark">
             <tr>
               <th>Description</th>
               <th>Category</th>
@@ -78,7 +78,7 @@ function MySubmissions() {
               <th>Date</th>
               <th>Status</th>
               <th>Remarks</th>
-              <th>Manasu Marchukuna</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
