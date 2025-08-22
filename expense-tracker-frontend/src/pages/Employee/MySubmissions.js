@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchMySubmissions } from "../../service/mysubmissionsService";
+import { deleteMySubmissoin, fetchMySubmissions } from "../../service/mysubmissionsService";
 import EditMySubmission from "./EditMySubmission";
 import { fetchCategories } from "../../service/expenseService";
 
@@ -8,6 +8,7 @@ function MySubmissions() {
   const [remarksMap, setRemarksMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [editingSubmission ,setEditingSubmission] = useState({});
 
   useEffect(() => { 
@@ -16,6 +17,7 @@ function MySubmissions() {
         const username = localStorage.getItem("username");
         const password = localStorage.getItem("password");
         const userId = localStorage.getItem("userId");
+
         const res = await fetchMySubmissions(username, password, userId);
         const categories = await fetchCategories();
 
@@ -27,7 +29,6 @@ function MySubmissions() {
           })
         });
 
-
         setSubmissions(res);
       } catch (error) {
         alert(error);
@@ -36,14 +37,26 @@ function MySubmissions() {
       }
       setLoading(false);
     };
-    if(!isEditing){
+
+    if(!isEditing || !isDeleting){
       fetchSubs();
     }
-  },[isEditing]);
+
+  },[isEditing,isDeleting]);
 
   const onClose = () =>{
     setIsEditing(false);
   }
+
+  const handleDeleteExpense =(expense)=>{
+    console.log("trying to delete " + expense.id);
+    setIsDeleting(true);
+
+    deleteMySubmissoin(expense)
+                      .then((res)=> alert(res.message))
+                      .then(()=>{setIsDeleting(false)})
+                      .catch((e)=> alert("Could not delete that expense..."));
+    }
 
   return (
     <div>
@@ -81,7 +94,7 @@ function MySubmissions() {
                   {sub.status === "PENDING" ? (
                     <>
                       <button className="btn btn-sm btn-secondary" onClick={()=>{setIsEditing(true); setEditingSubmission(sub)}}>Edit</button>
-                      <button className="btn btn-sm btn-danger ms-2">Delete</button>
+                      <button className="btn btn-sm btn-danger ms-2" onClick={()=>{handleDeleteExpense(sub)}}>Delete</button>
                     </>
                   ) : (
                     <span>-</span>

@@ -21,7 +21,7 @@ export const addExpense = async (formData) =>{
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
     
-    const response = await fetch(baseURL+'/api/expenses/addexpense' , {
+    const response = await fetch(baseURL+'/api/employee/addexpense' , {
         method: "POST",
         headers: {
             "Authorization": "Basic " + btoa(`${username}:${password}`),

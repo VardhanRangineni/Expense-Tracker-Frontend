@@ -59,7 +59,6 @@ const ManagerSubmissions = () => {
   };
 
   if (loading) return <div>Loading...</div>;
-
   if (submissions.length === 0) return <div>No submissions found.</div>;
 
   return (
