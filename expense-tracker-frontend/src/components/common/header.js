@@ -20,14 +20,18 @@ const Header = ({role,setRole}) => {
 
   const getPath = (item) => {
     const paths = {
+      'LOGIN': '/login',
       'DASHBOARD': '/dashboard',
+
       'MY SUBMISSIONS': '/my-submissions',
       'ADD EXPENSE':'/add-submission',
+      
       'VIEW SUBMISSIONS': '/view-submissions',
-      'REPORTS': '/reports',
-      'HISTORY': '/history',
+      
       'ADD MEMBER': '/add-member',
-      'LOGIN': '/login'
+      'VIEW MEMBERS':'/view-members',
+      'REPORTS': '/reports'
+      
     };
     return paths[item];
   };
@@ -73,7 +77,7 @@ const Header = ({role,setRole}) => {
 
       {role === 'ROLE_ADMIN' && (
         <div className='d-flex gap-3 ms-2 me-2'>
-          {['HOME', 'DASHBOARD',  'VIEW SUBMISSIONS', 'REPORTS', 'ADD MEMBER'].map(item => (
+          {['DASHBOARD', 'REPORTS', 'ADD MEMBER'].map(item => (
             <div key={item} style={{ marginBottom: '6px' }}>
               <NavLink
                 to={getPath(item)}

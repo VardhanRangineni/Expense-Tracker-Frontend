@@ -34,7 +34,7 @@ function AddSubmission() {
     useEffect(()=>{
         if(dataCollected){
             addExpense(formData)
-                        .then(()=>alert("Expense Creation Succesful"))
+                        .then((res)=>alert(res.message))
                         .catch(e=>alert(e))
         }
         setFormData({
@@ -59,15 +59,10 @@ function AddSubmission() {
 
     const handleSubmit= async (e)=>{
         e.preventDefault();
-    
         const username = localStorage.getItem("username");
         const password = localStorage.getItem("password");
         
-    
         const userDetails = await getUser(username,password);
-        
-        console.log(userDetails.managerId,userDetails.id);
-    
         setFormData(prev => ({
             ...prev,
             managerId: userDetails.managerId,
