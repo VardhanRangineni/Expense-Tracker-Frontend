@@ -6,26 +6,16 @@ const EmployeeDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
-    const employeeId = localStorage.getItem("userId");
 
     const today = new Date();
-    const month = today.getMonth() + 1;
-    const year = today.getFullYear();
+    const monthAndYear = today.toLocaleString('default', { month: 'long' , year:'numeric'});
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             setError(null);
             try {
-                const data = await fetchCategorySpendByMonth(
-                    username,
-                    password,
-                    employeeId,
-                    month,
-                    year
-                );
+                const data = await fetchCategorySpendByMonth();
                 setCategorySpend(data);
             } catch (err) {
                 setError(err.message);
@@ -34,7 +24,7 @@ const EmployeeDashboard = () => {
         };
 
         fetchData();
-    }, [username, password, employeeId, month, year]);
+    }, []);
 
     if (loading) return <div className="text-center mt-4">Loading...</div>;
 
@@ -56,7 +46,7 @@ const EmployeeDashboard = () => {
                 <div className="col-12">
                     <div className="card">
                         <div className="card-header">
-                            <h5>Category-wise Spend for {month}/{year}</h5>
+                            <h5>Category-wise Spend for {monthAndYear}</h5>
                         </div>
                         <div className="card-body">
                             <div className="table-responsive">
@@ -75,10 +65,10 @@ const EmployeeDashboard = () => {
                                                 </td>
                                             </tr>
                                         ) : (
-                                            categorySpend.map((item, idx) => (
+                                            categorySpend.map((category, idx) => (
                                                 <tr key={idx}>
-                                                    <td>{item.category}</td>
-                                                    <td>₹{item.amountSpent.toLocaleString()}</td>
+                                                    <td>{category.name}</td>
+                                                    <td>₹{category.totalExpense}</td>
                                                 </tr>
                                             ))
                                         )}

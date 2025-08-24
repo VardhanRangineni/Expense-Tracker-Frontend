@@ -86,7 +86,7 @@ const ManagerSubmissions = () => {
           </tr>
         </thead>
         <tbody>
-          {submissions.map(sub => (
+          {submissions?.map(sub => (
             <tr key={sub.id}>
               <td>{sub.description}</td>
               <td>{sub.categoryName || sub.categoryId}</td>

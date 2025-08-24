@@ -63,7 +63,7 @@ const AddMember = ()=>{
 
             <div className="mb-3">
                 <label htmlFor="password" className="form-label">Password</label>
-                <input type="password" name="password" id="password" value={memberDetails.password} onChange={handleChange} className="form-control" />
+                <input type="password  " name="password" id="password" value={memberDetails.password} onChange={handleChange} className="form-control" />
             </div>
 
             <div className="mb-3">

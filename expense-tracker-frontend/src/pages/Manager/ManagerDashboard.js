@@ -83,7 +83,7 @@ const ManagerDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {employeeData.employees.map((employeeName, index) => (
+                    {employeeData?.employees?.map((employeeName, index) => (
                       <tr key={index}>
                         <td>{employeeName}</td>
                       </tr>

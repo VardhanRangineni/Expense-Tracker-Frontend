@@ -1,8 +1,14 @@
 const baseURL = "http://localhost:8080";
 
-export const fetchCategorySpendByMonth = async (username, password, employeeId, month, year) => {
+export const fetchCategorySpendByMonth = async () => {
+    
+
+    const username = localStorage.getItem("username");
+    const password = localStorage.getItem("password");
+    const employeeId = localStorage.getItem("userId");
+
     const response = await fetch(
-        `${baseURL}/api/employee/category-spend?employeeId=${employeeId}&month=${month}&year=${year}`,
+        `${baseURL}/api/employee/get-expense-per-category/${employeeId}`,
         {
             method: "GET",
             headers: {
