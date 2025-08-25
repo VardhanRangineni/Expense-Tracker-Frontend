@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchCategorySpendByMonth } from "../../service/employeedashboardService"
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
-import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from "react-chartjs-2";
 
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const EmployeeDashboard = () => {
     const [categorySpend, setCategorySpend] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
 
     const today = new Date();
     const monthAndYear = today.toLocaleString('default', { month: 'long' , year:'numeric'});
@@ -31,45 +31,43 @@ const EmployeeDashboard = () => {
 
     if (loading) return <div className="text-center mt-4">Loading...</div>;
 
-
-    ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
-    
     const categoryLabels = categorySpend.map((category) => category.name);
     const approvedAmounts = categorySpend.map((category) => category.totalExpense);
 
-    const barData = {
-    labels: categoryLabels,
-    datasets: [
-      {
-        label: 'Approved Amount',
-        data: approvedAmounts,
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-        borderColor: 'rgba(2, 154, 255, 1)',
+   
+
+    const doughnutData = {
+        labels: categoryLabels,
+        datasets: [
+            {
+                label: 'Approved Amount',
+                data: approvedAmounts,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+        ],
+                 borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 206, 86, 1)',
+        ],
         borderWidth: 1,
-      },
-    ],
-  };
+            },
+        ],
+    };
 
-  const barOptions = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          label: (context) => `₹${context.parsed.y.toLocaleString()}`,
+    const doughnutOptions = {
+        responsive: true,
+        plugins: {
+            legend: { position: 'bottom' },
+            tooltip: {
+                callbacks: {
+                    label: (context) => `₹${context.parsed.toLocaleString()}`,
+                },
+            },
         },
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: (value) => `₹${value.toLocaleString()}`,
-        },
-      },
-    },
-  };
-
+    };
 
     return (
         <div className="container mt-4">
@@ -90,6 +88,21 @@ const EmployeeDashboard = () => {
                     <div className="card mb-4">
                         <div className="card-header">
                             <h5>Category-wise Spend for {monthAndYear}</h5>
+                        </div>
+                        <div className="card-body d-flex justify-content-center">
+                            <div style={{ maxWidth: 400, width: "100%" }}>
+                                <Doughnut data={doughnutData} options={doughnutOptions} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-12">
+                    <div className="card mb-4">
+                        <div className="card-header">
+                            <h5>Amount Approved Per Category</h5>
                         </div>
                         <div className="card-body">
                             <div className="table-responsive">
@@ -120,19 +133,6 @@ const EmployeeDashboard = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div className="row" >
-                <div className="col-12">
-                <div className="card mb-4 ">
-                    <div className="card-header">
-                    <h5>Amount Approved Per Category</h5>
-                    </div>
-                    <div className="card-body">
-                    <Bar data={barData} options={barOptions} />
-                    </div>
-                </div>
                 </div>
             </div>
         </div>

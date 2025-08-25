@@ -5,8 +5,10 @@ import {
   fetchCategoryWiseApproved,
 } from "../../service/managerdashboardService";
 
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ManagerDashboard = () => {
   const [totalApprovedAmount, setTotalApprovedAmount] = useState(0);
@@ -52,39 +54,41 @@ const ManagerDashboard = () => {
 
   if (loading) return <div className="text-center mt-4">Loading...</div>;
 
-  ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
-
   const categoryLabels = categoryData.map((category) => category.categoryName);
   const approvedAmounts = categoryData.map((category) => category.approvedAmount);
 
-  const barData = {
+  const doughnutData = {
     labels: categoryLabels,
     datasets: [
       {
         label: 'Approved Amount',
         data: approvedAmounts,
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-        borderColor: 'rgba(2, 154, 255, 1)',
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(255, 206, 86, 1)',
+        ],
         borderWidth: 1,
       },
     ],
   };
 
-  const barOptions = {
+  const doughnutOptions = {
     responsive: true,
     plugins: {
-      legend: { display: false },
+      legend: { position: 'bottom' },
       tooltip: {
         callbacks: {
-          label: (context) => `₹${context.parsed.y.toLocaleString()}`,
-        },
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: (value) => `₹${value.toLocaleString()}`,
+          label: (context) => {
+            const label = context.label || '';
+            const value = context.parsed || 0;
+            return `${label}: ₹${value.toLocaleString()}`;
+          },
         },
       },
     },
@@ -99,11 +103,23 @@ const ManagerDashboard = () => {
       </div>
 
       <div className="row mb-4">
-        <div className="col-12">
-          <div className="text-black">
-            <div className="card-body text-center">
+        <div className="col-md-6 mb-3 mb-md-0">
+          <div className="card h-100">
+            <div className="card-body text-center d-flex flex-column justify-content-center">
               <h4>Total Amount Approved by You</h4>
               <h2>₹{totalApprovedAmount.toLocaleString()}</h2>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 d-flex align-items-center justify-content-center">
+          <div className="card w-100">
+            <div className="card-header text-center">
+              <h5>Amount Approved Per Category</h5>
+            </div>
+            <div className="card-body d-flex justify-content-center align-items-center">
+              <div style={{ width: "100%", maxWidth: "350px" }}>
+                <Doughnut data={doughnutData} options={doughnutOptions} />
+              </div>
             </div>
           </div>
         </div>
@@ -111,7 +127,7 @@ const ManagerDashboard = () => {
 
       <div className="row mb-4">
         <div className="col-12">
-          <div className="card">
+          <div className="card h-100">
             <div className="card-header">
               <h5>Total Employees Under Manager: {employeeData.totalCount}</h5>
             </div>
@@ -132,19 +148,6 @@ const ManagerDashboard = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-              <h5>Amount Approved Per Category</h5>
-            </div>
-            <div className="card-body">
-              <Bar data={barData} options={barOptions} />
             </div>
           </div>
         </div>
