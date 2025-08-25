@@ -24,10 +24,13 @@ function AddSubmission() {
                 const password = localStorage.getItem("password");
                 const res = await fetchCategories(username, password);
                 setCategories(res);
+
+                
             } catch (error) {
                 alert(error);
             }
         };
+        
         fetchData();
     }, []);
 
@@ -40,9 +43,7 @@ function AddSubmission() {
         setFormData({
             categoryId: '',
             amount: 0,
-            description:'',
-            managerId:0,
-            employeeId:0
+            description:''
         })
         setDataCollected(false);
     },[dataCollected])
@@ -63,9 +64,10 @@ function AddSubmission() {
         const password = localStorage.getItem("password");
         
         const userDetails = await getUser(username,password);
+
         setFormData(prev => ({
             ...prev,
-            managerId: userDetails.managerId,
+            managerId: userDetails.manager_id,
             employeeId : userDetails.id
         }));
 

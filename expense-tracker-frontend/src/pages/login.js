@@ -25,7 +25,7 @@ export default function Login({ setRole }) {
       // Add: fetch user details and save userId to localStorage
       const userDetails = await getUser(formData.username, formData.password);
       localStorage.setItem("userId", userDetails.id);
-      localStorage.setItem("managerId", userDetails.managerId);
+      localStorage.setItem("managerId", userDetails.manager_id);
       console.log("User Logged in with role : " + role);
       setRole(role);
       navigate('/dashboard');

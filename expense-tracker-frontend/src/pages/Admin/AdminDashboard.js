@@ -1,5 +1,6 @@
 import  { useState, useEffect } from 'react';
 import { fetchAllManagers, fetchEmployees, fetchExpenses } from '../../service/adminService';
+import { fetchCategories } from '../../service/expenseService';
 
 
 const AdminDashboard = () => {
@@ -27,16 +28,16 @@ const AdminDashboard = () => {
                     .catch((err)=>console.log(err));
     }
 
-    // const loadCategories=async()=>{
-    //         ()
-    //                 .then((res)=>setEmployees(res))
-    //                 .catch((err)=>console.log(err));
-    // }
+    const loadCategories=async()=>{
+            fetchCategories()
+                    .then((res)=>setCategories(res))
+                    .catch((err)=>console.log(err));
+    }
     
     loadExpenses(filters);
     loadEmployees();
     loadManagers();
-    // fetchCategories();
+    loadCategories();
   }, []);
 
   useEffect(() => {
