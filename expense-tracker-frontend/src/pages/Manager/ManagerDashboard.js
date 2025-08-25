@@ -5,6 +5,9 @@ import {
   fetchCategoryWiseApproved,
 } from "../../service/managerdashboardService";
 
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+
 const ManagerDashboard = () => {
   const [totalApprovedAmount, setTotalApprovedAmount] = useState(0);
   const [employeeData, setEmployeeData] = useState({
@@ -48,6 +51,44 @@ const ManagerDashboard = () => {
   }, [username, password, managerId]);
 
   if (loading) return <div className="text-center mt-4">Loading...</div>;
+
+  ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+  const categoryLabels = categoryData.map((category) => category.categoryName);
+  const approvedAmounts = categoryData.map((category) => category.approvedAmount);
+
+  const barData = {
+    labels: categoryLabels,
+    datasets: [
+      {
+        label: 'Approved Amount',
+        data: approvedAmounts,
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(2, 154, 255, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const barOptions = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (context) => `₹${context.parsed.y.toLocaleString()}`,
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value) => `₹${value.toLocaleString()}`,
+        },
+      },
+    },
+  };
 
   return (
     <div className="container mt-4">
@@ -103,32 +144,7 @@ const ManagerDashboard = () => {
               <h5>Amount Approved Per Category</h5>
             </div>
             <div className="card-body">
-              <div className="table-responsive">
-                <table className="table table-striped">
-                  <thead className="table-dark">
-                    <tr>
-                      <th>Category Name</th>
-                      <th>Approved Amount</th>
-                      <th>Remaining Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {categoryData.map((category, index) => (
-                      <tr key={index}>
-                        <td>{category.categoryName}</td>
-                        <td>₹{category.approvedAmount.toLocaleString()}</td>
-                        <td
-                          className={
-                            category.remainingAmount
-                          }
-                        >
-                          ₹{category.remainingAmount.toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <Bar data={barData} options={barOptions} />
             </div>
           </div>
         </div>
