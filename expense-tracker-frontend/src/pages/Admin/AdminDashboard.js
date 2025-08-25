@@ -1,13 +1,18 @@
 import  { useState, useEffect } from 'react';
-import { fetchAllManagers, fetchEmployees, fetchExpenses } from '../../service/adminService';
+import { fetchAllManagers, fetchEmployees, fetchExpenses, fetchTotalExpense, fetchTotalExpensePerCategory } from '../../service/adminService';
 import { fetchCategories } from '../../service/expenseService';
-
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import { Bar } from "react-chartjs-2";
 
 const AdminDashboard = () => {
   const [expenses, setExpenses] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [managers, setManagers] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [totalExpense,setTotalExpense] = useState(0);
+  const [isLoading,setIsLoading] = useState(true);
+  const [expensePercategory,setExpenseForCategory] = useState([]);
+
   const [filters, setFilters] = useState({
     employeeId: '',
     managerId: '',
@@ -15,29 +20,35 @@ const AdminDashboard = () => {
     month: new Date().getMonth() + 1
   });
 
-  useEffect(() => {
-    const loadManagers=async()=>{
-            fetchAllManagers()
-                    .then((res)=>setManagers(res))
-                    .catch((err)=>console.log(err));
-    }
-    
-    const loadEmployees=async()=>{
-            fetchEmployees()
-                    .then((res)=>setEmployees(res))
-                    .catch((err)=>console.log(err));
-    }
+  const today = new Date();
+  const monthAndYear = today.toLocaleString('default', { month: 'long' , year:'numeric'});
 
-    const loadCategories=async()=>{
-            fetchCategories()
-                    .then((res)=>setCategories(res))
-                    .catch((err)=>console.log(err));
+
+  useEffect(() => {
+    const loadData = async()=>{
+      try{
+        const managersData = await fetchAllManagers();
+        setManagers(managersData);
+
+        const employeesData = await fetchEmployees(); 
+        setEmployees(employeesData);
+
+        const categoriesData = await fetchCategories();
+        setCategories(categoriesData);
+
+        const totalExpenseData = await fetchTotalExpense();
+        setTotalExpense(totalExpenseData.totalExpense); 
+
+        const expensePerCategoryData= await fetchTotalExpensePerCategory();
+        setExpenseForCategory(expensePerCategoryData);
+      }catch(e){
+        alert(e);
+      }finally{
+        setIsLoading(false);
+      }
     }
-    
+    loadData();
     loadExpenses(filters);
-    loadEmployees();
-    loadManagers();
-    loadCategories();
   }, []);
 
   useEffect(() => {
@@ -58,8 +69,50 @@ const AdminDashboard = () => {
     }));
   };
 
+  ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+      
+      const categoryLabels = categories.map((category) => category.name);
+      const approvedAmounts = expensePercategory.map((category) => category.totalExpense);
+  
+      const barData = {
+      labels: categoryLabels,
+      datasets: [
+        {
+          label: 'Approved Amount',
+          data: approvedAmounts,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(2, 154, 255, 1)',
+          borderWidth: 1,
+        },
+      ],
+    };
+  
+    const barOptions = {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (context) => `₹${context.parsed.y.toLocaleString()}`,
+          },
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: (value) => `₹${value.toLocaleString()}`,
+          },
+        },
+      },
+    };
+  
+
+  if(isLoading) return (<div>loading...</div>)
+
   return (
     <div className="container mt-4">
+      
       <h3 className="mb-4">Expense Reports</h3>
 
       <div className="card mb-4">
@@ -161,6 +214,28 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+
+      <div className='card mb-4'>
+        <div className='card-body'>
+          <h2>Total EXPENSE for  {monthAndYear}:  <span > ₹{totalExpense} </span></h2>
+        </div>
+      </div>
+      
+      <div className="row" >
+          <div className="col-12">
+            <div className="card mb-4 ">
+                <div className="card-header">
+                  <h5>Amount Approved Per Category</h5>
+                </div>
+                <div className="card-body">
+                  <Bar data={barData} options={barOptions} />
+                </div>
+            </div>
+          </div>
+      </div>
+
+      
+
     </div>
   );
 };

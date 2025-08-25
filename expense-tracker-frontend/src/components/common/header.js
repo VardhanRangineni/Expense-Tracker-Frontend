@@ -77,7 +77,7 @@ const Header = ({role,setRole}) => {
 
       {role === 'ROLE_ADMIN' && (
         <div className='d-flex gap-3 ms-2 me-2'>
-          {['DASHBOARD', 'ADD MEMBER'].map(item => (
+          {['DASHBOARD', 'ADD MEMBER','VIEW MEMBERS'].map(item => (
             <div key={item} style={{ marginBottom: '6px' }}>
               <NavLink
                 to={getPath(item)}

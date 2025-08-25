@@ -24,7 +24,7 @@ function AddSubmission() {
                 const password = localStorage.getItem("password");
                 const res = await fetchCategories(username, password);
                 setCategories(res);
-
+                
                 
             } catch (error) {
                 alert(error);

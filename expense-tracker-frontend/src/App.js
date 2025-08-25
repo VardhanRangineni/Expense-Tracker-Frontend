@@ -10,6 +10,7 @@ import MySubmissions from './pages/Employee/MySubmissions';
 import ViewSubmissions from './pages/Manager/ViewSubmissions';
 import Dashboard from './pages/Dashboard';
 import AddMember from './pages/Admin/AddMember';
+import ViewMembers from './pages/Admin/ViewMembers';
 
 function App() {
   
@@ -37,6 +38,7 @@ function App() {
 
 
           <Route path="/add-member" element={currRole==="ROLE_ADMIN"? <AddMember/> : <Navigate to="/login"/>} />
+          <Route path="/view-members" element={currRole==="ROLE_ADMIN"? <ViewMembers/> : <Navigate to="/login"/>} />
           <Route path="/*" element={<Navigate to="/dashboard" />} />
           
         </Routes>

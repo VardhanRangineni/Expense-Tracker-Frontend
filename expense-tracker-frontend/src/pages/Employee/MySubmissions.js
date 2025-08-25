@@ -88,7 +88,15 @@ function MySubmissions() {
                 <td>{sub.categoryName}</td>
                 <td>{sub.amount}</td>
                 <td>{sub.date}</td>
-                <td>{sub.status}</td>
+                <td>
+                  <span className={`badge ${
+                        sub.status === 'APPROVED' ? 'bg-success' :
+                        sub.status === 'REJECTED' ? 'bg-danger' :
+                        'bg-warning'
+                      }`}>
+                    {sub.status}
+                  </span>
+                  </td>
                 <td>{sub.remarks || "---"}</td>
                 <td>
                   {sub.status === "PENDING" ? (

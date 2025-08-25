@@ -87,3 +87,41 @@ export const fetchEmployees = async (filters = {}) => {
     }
     return await response.json();
 };
+
+
+
+export const fetchTotalExpense = async () => {
+    const username = localStorage.getItem("username");
+    const password = localStorage.getItem("password");
+
+    const response = await fetch(`${baseURL}/api/admin/get-total-expense`, {
+        method: "GET",
+        headers: {
+            "Authorization": "Basic " + btoa(`${username}:${password}`),
+            "Content-Type": "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Could not fetch total expense');
+    }
+    return await response.json();
+};
+
+export const fetchTotalExpensePerCategory = async () => {
+    const username = localStorage.getItem("username");
+    const password = localStorage.getItem("password");
+
+    const response = await fetch(`${baseURL}/api/admin/get-expense-per-category`, {
+        method: "GET",
+        headers: {
+            "Authorization": "Basic " + btoa(`${username}:${password}`),
+            "Content-Type": "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Could not fetch total expense');
+    }
+    return await response.json();
+};
