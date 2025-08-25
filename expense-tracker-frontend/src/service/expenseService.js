@@ -32,7 +32,8 @@ export const addExpense = async (formData) =>{
     });
     
     if(!response.ok){
-        throw new Error('Could not Add a new expense');
+        const res = await response.json();
+        throw new Error('Could not Add a new expense \n ' + res.message);
     }
 
     return await response.json();

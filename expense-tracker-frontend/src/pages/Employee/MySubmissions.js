@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { deleteMySubmissoin, fetchMySubmissions } from "../../service/mysubmissionsService";
 import EditMySubmission from "./EditMySubmission";
-import { fetchCategories } from "../../service/expenseService";
 
 function MySubmissions() {
   const [submissions, setSubmissions] = useState([]);
-  const [remarksMap, setRemarksMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -19,18 +17,8 @@ function MySubmissions() {
       try {
         const username = localStorage.getItem("username");
         const password = localStorage.getItem("password");
-        const userId = localStorage.getItem("userId");
 
-        const res = await fetchMySubmissions(username, password, userId);
-        const categories = await fetchCategories();
-
-        //The submission (expense) object doesnt have category name but on categoryID so populating categorynames manually
-        res.map(sub => {
-          categories.map((category)=>{
-            if(sub.categoryId == category.id)
-              sub.categoryName = category.name;
-          })
-        });
+        const res = await fetchMySubmissions(username, password);
 
         setSubmissions(res);
       } catch (error) {

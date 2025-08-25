@@ -5,6 +5,7 @@ import { updateMySubmission } from "../../service/mysubmissionsService";
 const EditMySubmission = ({currentSubmission,onClose}) =>{
     const [categories,setCategories] = useState([]);
     const [formData, setFormData] = useState({
+            id:0,
             categoryId: '',
             amount: 0,
             description:'',
@@ -26,7 +27,7 @@ const EditMySubmission = ({currentSubmission,onClose}) =>{
             };
             fetchData();
     }, []);
-
+    
     
     const handleChange = (e) =>{
         const { name, value } = e.target;
@@ -42,8 +43,7 @@ const EditMySubmission = ({currentSubmission,onClose}) =>{
                             .then((res)=>{alert(res.message)})
                             .catch((e)=>alert(e.message))        
         onClose();
-    }
-        
+    }   
     
     return(
         <div>
@@ -79,7 +79,7 @@ const EditMySubmission = ({currentSubmission,onClose}) =>{
             </div>
             <button type="submit" className="btn btn-primary mb-3 w-100">Update</button>
             <button onClick={onClose} className="btn btn-secondary mb-5 w-100">Close</button>
-        </form>
+            </form>
         </div>
     )
 }
