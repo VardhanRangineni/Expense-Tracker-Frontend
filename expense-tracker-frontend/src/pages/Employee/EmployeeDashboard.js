@@ -82,12 +82,12 @@ const EmployeeDashboard = () => {
                     {error}
                 </div>
             )}
-
+        
             <div className="row">
                 <div className="col-12">
                     <div className="card mb-4">
                         <div className="card-header">
-                            <h5>Category-wise Spend for {monthAndYear}</h5>
+                            <h5>Category wise Spend for {monthAndYear}</h5>
                         </div>
                         <div className="card-body d-flex justify-content-center">
                             <div style={{ maxWidth: 400, width: "100%" }}>
