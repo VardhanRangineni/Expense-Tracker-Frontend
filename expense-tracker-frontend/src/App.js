@@ -15,11 +15,11 @@ function App() {
   
   const [currRole,setCurrRole] = useState("ROLE_ANONYMOUS");
   
-    useEffect(()=>{
-      const currentRole = localStorage.getItem("role");
-      
-      setCurrRole(currentRole);
-    },[])
+  useEffect(()=>{
+    const currentRole = localStorage.getItem("role");
+    
+    setCurrRole(currentRole);
+  },[])
   
   return (
     <Router>

@@ -21,6 +21,7 @@ export const addExpense = async (formData) =>{
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
     
+    console.log("Trying to add expense:" +JSON.stringify(formData));
     const response = await fetch(baseURL+'/api/employee/addexpense' , {
         method: "POST",
         headers: {
