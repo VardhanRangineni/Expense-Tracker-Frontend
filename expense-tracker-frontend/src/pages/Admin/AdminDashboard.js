@@ -16,6 +16,8 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { downloadExcel, DownloadTableExcel } from 'react-export-table-to-excel';
+
 
 const AdminDashboard = () => {
   const [expenses, setExpenses] = useState([]);
@@ -69,6 +71,19 @@ const AdminDashboard = () => {
   useEffect(() => {
     loadExpenses();
   }, [filters]);
+
+  const handleDownloadReport = ()=>{
+    const header = ["Employee","Category","Amount","Date","Status","Description","Manager"]
+    downloadExcel({
+      fileName: "Expense Report",
+      sheet: "react-export-table-to-excel",
+      tablePayload: {
+        header,
+        body: expenses
+      },
+    });
+
+  }
 
   const loadExpenses = async () => {
     fetchExpenses(filters)
@@ -155,7 +170,7 @@ const AdminDashboard = () => {
       <div className="card mb-4">
         <div className="card-body">
           <div className="row mb-3">
-            <div className="col-md-3">
+            <div className="col-md-2">
               <select
                 className="form-select"
                 name="employeeId"
@@ -171,7 +186,7 @@ const AdminDashboard = () => {
               </select>
             </div>
 
-            <div className="col-md-3">
+            <div className="col-md-2">
               <select
                 className="form-select"
                 name="managerId"
@@ -187,7 +202,7 @@ const AdminDashboard = () => {
               </select>
             </div>
 
-            <div className="col-md-3">
+            <div className="col-md-2">
               <select
                 className="form-select"
                 name="categoryId"
@@ -203,7 +218,7 @@ const AdminDashboard = () => {
               </select>
             </div>
 
-            <div className="col-md-3">
+            <div className="col-md-2">
               <select
                 className="form-select"
                 name="month"
@@ -218,6 +233,9 @@ const AdminDashboard = () => {
                   </option>
                 ))}
               </select>
+            </div>
+            <div className="col-md-2">
+              <button className="btn btn-primary" onClick={handleDownloadReport}>Donwload Report</button>
             </div>
           </div>
 

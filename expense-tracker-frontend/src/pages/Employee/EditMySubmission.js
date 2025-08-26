@@ -82,6 +82,10 @@ const EditMySubmission = ({currentSubmission,onClose}) =>{
                 <label htmlFor="description" className="form-label">Description</label>
                 <input type="text" name="description" id="description" value={formData.description} onChange={handleChange} className="form-control" />
             </div>
+            <div className="mb-3">
+                <label htmlFor="receiptUrl" className="form-label">Reciept Url</label>
+                <input type="text" name="receiptUrl" id="receiptUrl" value={formData.receiptUrl} onChange={handleChange} className="form-control" />
+            </div>
             <button type="submit" className="btn btn-primary mb-3 w-100">Update</button>
             <button onClick={onClose} className="btn btn-secondary mb-5 w-100">Close</button>
             </form>

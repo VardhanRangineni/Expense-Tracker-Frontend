@@ -45,7 +45,8 @@ function AddSubmission() {
         setFormData({
             categoryId: '',
             amount: 0,
-            description:''
+            description:'',
+            receiptUrl:''
         })
         setDataCollected(false);
     },[dataCollected])
@@ -113,6 +114,12 @@ function AddSubmission() {
                 <label htmlFor="description" className="form-label">Description</label>
                 <input type="text" name="description" id="description" value={formData.description} onChange={handleChange} className="form-control" />
             </div>
+
+            <div className="mb-3">
+                <label htmlFor="receiptUrl" className="form-label">Reciept Url</label>
+                <input type="text" name="receiptUrl" id="receiptUrl" value={formData.receiptUrl} onChange={handleChange} className="form-control" />
+            </div>
+
             <button type="submit" className="btn btn-primary w-100">Submit</button>
         </form>
     

@@ -111,6 +111,7 @@ function MySubmissions() {
                 <th>Status</th>
                 <th>Remarks</th>
                 <th>Actions</th>
+                <th>ReceiptUrl</th>
               </tr>
             </thead>
             <tbody>
@@ -138,6 +139,13 @@ function MySubmissions() {
                       </>
                     ) : (
                       <span>-</span>
+                    )}
+                  </td>
+                  <td>
+                    {sub.receiptUrl==="" || sub.receiptUrl===null?(
+                      <span>No Reciept</span>
+                    ):(
+                      <a target="_blank" href={sub.receiptUrl}>Reciept</a>
                     )}
                   </td>
                 </tr>

@@ -114,6 +114,7 @@ const ManagerSubmissions = () => {
             <th>Employee</th>
             <th>Add Remarks</th>
             <th>Actions</th>
+            <th>Receipt</th>
           </tr>
         </thead>
         <tbody>
@@ -166,6 +167,13 @@ const ManagerSubmissions = () => {
                   "-"
                 )}
               </td>
+              <td>
+                    {sub.receiptUrl==="" || sub.receiptUrl===null?(
+                      <span>No Reciept</span>
+                    ):(
+                      <a target="_blank" href={sub.receiptUrl}>Reciept</a>
+                    )}
+                  </td>
             </tr>
           ))}
         </tbody>
