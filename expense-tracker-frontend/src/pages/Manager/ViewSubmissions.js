@@ -193,7 +193,7 @@ const ManagerSubmissions = () => {
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
               >
-                Previous
+                {"<"}
               </button>
             </li>
             
@@ -217,8 +217,8 @@ const ManagerSubmissions = () => {
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
               >
-                Next
-              </button>
+                {">"}
+                </button>
             </li>
           </ul>
           

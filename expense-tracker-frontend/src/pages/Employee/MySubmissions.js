@@ -154,7 +154,7 @@ function MySubmissions() {
                     onClick={handlePreviousPage}
                     disabled={currentPage === 1}
                   >
-                    Previous
+                    {"<"}
                   </button>
                 </li>
                 
@@ -178,7 +178,7 @@ function MySubmissions() {
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages}
                   >
-                    Next
+                    {">"}
                   </button>
                 </li>
               </ul>
