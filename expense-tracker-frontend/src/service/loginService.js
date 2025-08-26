@@ -3,6 +3,7 @@ export const loginUser = async (username, password) => {
     method: "POST",
     headers: {
       "Authorization": "Basic " + btoa(`${username}:${password}`),
+      "credentials":"include",
       "Content-Type": "application/json"
     }
   });
