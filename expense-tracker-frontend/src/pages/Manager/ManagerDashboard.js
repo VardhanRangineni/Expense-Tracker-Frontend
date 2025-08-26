@@ -33,15 +33,13 @@ const ManagerDashboard = () => {
             fetchEmployeeList(username, password, managerId),
             fetchCategoryWiseApproved(username, password, managerId),
           ]);
-
+          
         const totalAmount = approvedAmounts.reduce(
           (sum, expense) => sum + expense.amount,
           0
         );
         setTotalApprovedAmount(totalAmount);
-
         setEmployeeData(employeeList);
-
         setCategoryData(categoryApproved);
       } catch (err) {
         alert(err.message);
@@ -50,7 +48,7 @@ const ManagerDashboard = () => {
     };
 
     loadDashboardData();
-  }, [username, password, managerId]);
+  }, []);
 
   if (loading) return <div className="text-center mt-4">Loading...</div>;
 

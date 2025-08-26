@@ -38,8 +38,8 @@ const Header = ({role,setRole}) => {
 
   return (
     <nav>
-      <div className="text-light bg-dark p-3 d-flex justify-content-evenly align-content-center">
-        <h2>Expense Tracker</h2>
+      <div className="text-light bg-dark p-3 d-flex justify-content-around align-items-center">
+        <h2 className='mb-0'>Expense Tracker</h2>
       
 
       {role === 'ROLE_EMPLOYEE' && (
@@ -60,9 +60,9 @@ const Header = ({role,setRole}) => {
       )}
 
       {role === 'ROLE_MANAGER' && (
-         <div className='d-flex gap-3 ms-2 me-2'>
+         <div className='d-flex gap-3 ms-2 me-2 align-items-center'>
           {['DASHBOARD', 'VIEW SUBMISSIONS'].map(item => (
-            <div key={item} style={{ marginBottom: '6px' }}>
+            <div key={item} style={{  }}>
               <NavLink
                 to={getPath(item)}
                 end={item === 'HOME'}

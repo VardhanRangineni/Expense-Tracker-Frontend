@@ -5,8 +5,8 @@ const AddMember = ()=>{
     const [memberDetails,setMemberDetails] = useState({
         'username':'',
         'password':'',
-        'roleId':'0',
-        'managerId':'0'
+        'role_id':'0',
+        'manager_id':'0'
     })
     const [isNewEmployee,setIsNewEmployee] = useState(false);
     const [managers,SetManagers] = useState([]);
@@ -22,7 +22,7 @@ const AddMember = ()=>{
     })
     const handleChange=(e)=>{
         const { name, value } = e.target;
-        if(name == "roleId" ){
+        if(name == "role_id" ){
             setIsNewEmployee(value=="3")
         }
         setMemberDetails(prev => ({
@@ -35,14 +35,15 @@ const AddMember = ()=>{
             setMemberDetails({
             'username':'',
             'password':'',
-            'roleId':'0',
-            'managerId':'0'
+            'role_id':'0',
+            'manager_id':'0'
         })
         setIsNewEmployee(false);
     }
     
     const handleSubmit=(e)=>{
         e.preventDefault();
+
         addNewUser(memberDetails)
             .then((res)=>alert(res.message))
             .then(clearForm)
@@ -69,10 +70,10 @@ const AddMember = ()=>{
             <div className="mb-3">
                 <label htmlFor="role" className="form-label">Select Role</label>
                     <select
-                    id="roleId"
-                    name="roleId"
+                    id="role_id"
+                    name="role_id"
                     onChange={handleChange}
-                    value={memberDetails.roleId}
+                    value={memberDetails.role_id}
                     required
                     className="form-select"
                     >
@@ -84,10 +85,10 @@ const AddMember = ()=>{
             {isNewEmployee && 
             
             <div className="mb-3">
-                <label htmlFor="managerId" className="form-label">Manager ID</label>
+                <label htmlFor="manager_id" className="form-label">Manager ID</label>
                 
 
-                <select id="managerId" name="managerId" value={memberDetails.managerId} onChange={handleChange}  className="form-select">
+                <select id="manager_id" name="manager_id" value={memberDetails.manager_id} onChange={handleChange}  className="form-select">
                     <option value="" >Assign a manager</option>
                     {managers.map(manager=>(
                         <option key={manager.id} value={manager.id}>

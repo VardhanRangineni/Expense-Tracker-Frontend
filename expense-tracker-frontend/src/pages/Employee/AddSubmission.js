@@ -107,7 +107,7 @@ function AddSubmission() {
 
             <div className="mb-3">
                 <label htmlFor="date" className="form-label">Date</label>
-                <input type="date" name="date" id="date" value={formData.date}  onChange={handleChange} className="form-control"/>
+                <input type="date" name="date" id="date" value={formData.date} max={new Date().toISOString().split("T")[0]} onChange={handleChange} className="form-control"/>
             </div>
             <div className="mb-3">
                 <label htmlFor="description" className="form-label">Description</label>

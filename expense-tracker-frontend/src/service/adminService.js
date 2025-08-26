@@ -33,9 +33,9 @@ export const addNewUser = async (user) =>{
     });
     
     if(!response.ok){
-        throw new Error('Could not Add a new expense');
+        throw new Error('Could not add a new user...');
     }
-
+    
     return await response.json();
 }
 
@@ -58,7 +58,8 @@ export const fetchExpenses = async (filters = {}) => {
         headers: {
             "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json"
-        }
+        },
+        
     });
 
     if (!response.ok) {
