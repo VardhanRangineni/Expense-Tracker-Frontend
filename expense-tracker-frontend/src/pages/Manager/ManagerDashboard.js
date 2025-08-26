@@ -5,8 +5,8 @@ import {
   fetchCategoryWiseApproved,
 } from "../../service/managerdashboardService";
 
-import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -33,13 +33,15 @@ const ManagerDashboard = () => {
             fetchEmployeeList(username, password, managerId),
             fetchCategoryWiseApproved(username, password, managerId),
           ]);
-          
+
         const totalAmount = approvedAmounts.reduce(
           (sum, expense) => sum + expense.amount,
           0
         );
         setTotalApprovedAmount(totalAmount);
+
         setEmployeeData(employeeList);
+
         setCategoryData(categoryApproved);
       } catch (err) {
         alert(err.message);
@@ -48,28 +50,30 @@ const ManagerDashboard = () => {
     };
 
     loadDashboardData();
-  }, []);
+  }, [username, password, managerId]);
 
   if (loading) return <div className="text-center mt-4">Loading...</div>;
 
   const categoryLabels = categoryData.map((category) => category.categoryName);
-  const approvedAmounts = categoryData.map((category) => category.approvedAmount);
+  const approvedAmounts = categoryData.map(
+    (category) => category.approvedAmount
+  );
 
   const doughnutData = {
     labels: categoryLabels,
     datasets: [
       {
-        label: 'Approved Amount',
+        label: "Approved Amount",
         data: approvedAmounts,
         backgroundColor: [
-          'rgba(54, 162, 235, 0.6)',
-          'rgba(255, 99, 132, 0.6)',
-          'rgba(255, 206, 86, 0.6)',
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(255, 206, 86, 0.6)",
         ],
         borderColor: [
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 99, 132, 1)',
-          'rgba(255, 206, 86, 1)',
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 99, 132, 1)",
+          "rgba(255, 206, 86, 1)",
         ],
         borderWidth: 1,
       },
@@ -79,11 +83,11 @@ const ManagerDashboard = () => {
   const doughnutOptions = {
     responsive: true,
     plugins: {
-      legend: { position: 'bottom' },
+      legend: { position: "bottom" },
       tooltip: {
         callbacks: {
           label: (context) => {
-            const label = context.label || '';
+            const label = context.label || "";
             const value = context.parsed || 0;
             return `${label}: ₹${value.toLocaleString()}`;
           },
@@ -109,6 +113,7 @@ const ManagerDashboard = () => {
             </div>
           </div>
         </div>
+
         <div className="col-md-6 d-flex align-items-center justify-content-center">
           <div className="card w-100">
             <div className="card-header text-center">
