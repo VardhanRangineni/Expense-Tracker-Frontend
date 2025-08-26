@@ -115,6 +115,33 @@ const AdminDashboard = () => {
       
       <h3 className="mb-4">Expense Reports</h3>
 
+
+
+      <div className="row mb-4">
+        <div className='col-md-6 mb-3 mb-md-0'>
+         <div className='card h-100'>
+            <div className='card-body text-center d-flex flex-column justify-content-center'>
+            <h4>Total EXPENSE for  {monthAndYear}</h4>
+            <h2>₹{totalExpense}</h2>
+          </div>
+          </div>
+        </div>
+      
+        
+          <div className="col-md-6 d-flex align-items-center justify-content-center">
+            <div className="card w-100">
+                <div className="card-header text-center">
+                  <h5>Amount Approved Per Category</h5>
+                </div>
+                <div className="card-body">
+                  <Bar data={barData} options={barOptions} />
+                </div>
+            </div>
+          </div>
+        
+      </div>
+
+
       <div className="card mb-4">
         <div className="card-body">
           <div className="row mb-3">
@@ -215,24 +242,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className='card mb-4'>
-        <div className='card-body'>
-          <h2>Total EXPENSE for  {monthAndYear}:  <span > ₹{totalExpense} </span></h2>
-        </div>
-      </div>
-      
-      <div className="row" >
-          <div className="col-12">
-            <div className="card mb-4 ">
-                <div className="card-header">
-                  <h5>Amount Approved Per Category</h5>
-                </div>
-                <div className="card-body">
-                  <Bar data={barData} options={barOptions} />
-                </div>
-            </div>
-          </div>
-      </div>
+     
 
       
 
