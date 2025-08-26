@@ -6,11 +6,13 @@ function AddSubmission() {
     
     const [categories,setCategories] = useState([])
     const [dataCollected , setDataCollected] = useState(false);
-
+    const [currDate,setCurrDate] = useState(new Date().getDate());
     
+
     const [formData, setFormData] = useState({
         categoryId: '',
         amount: 0,
+        date:'',
         description:'',
         managerId:0,
         employeeId:0
@@ -30,7 +32,7 @@ function AddSubmission() {
                 alert(error);
             }
         };
-        
+        console.log(currDate);
         fetchData();
     }, []);
 
@@ -103,6 +105,10 @@ function AddSubmission() {
                 <input type="text" id="amount" name="amount" value={formData.amount} onChange={handleChange} className="form-control" />
             </div>
 
+            <div className="mb-3">
+                <label htmlFor="date" className="form-label">Date</label>
+                <input type="date" name="date" id="date" value={formData.date}  onChange={handleChange} className="form-control"/>
+            </div>
             <div className="mb-3">
                 <label htmlFor="description" className="form-label">Description</label>
                 <input type="text" name="description" id="description" value={formData.description} onChange={handleChange} className="form-control" />
