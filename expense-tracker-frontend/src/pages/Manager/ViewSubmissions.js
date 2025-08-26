@@ -5,6 +5,9 @@ const ManagerSubmissions = () => {
   const [submissions, setSubmissions] = useState([]);
   const [remarksMap, setRemarksMap] = useState({});
   const [loading, setLoading] = useState(true);
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const username = localStorage.getItem("username");
   const password = localStorage.getItem("password");
@@ -66,6 +69,47 @@ const ManagerSubmissions = () => {
     }
   };
 
+  const totalPages = Math.ceil(submissions.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentSubmissions = submissions.slice(startIndex, endIndex);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      const startPage = Math.max(1, currentPage - 2);
+      const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+    }
+    
+    return pageNumbers;
+  };
+
   if (loading) return <div>Loading...</div>;
   if (submissions.length === 0) return <div>No submissions found.</div>;
 
@@ -86,7 +130,7 @@ const ManagerSubmissions = () => {
           </tr>
         </thead>
         <tbody>
-          {submissions?.map(sub => (
+          {currentSubmissions?.map(sub => (
             <tr key={sub.id}>
               <td>{sub.description}</td>
               <td>{sub.categoryName || sub.categoryId}</td>
@@ -139,6 +183,52 @@ const ManagerSubmissions = () => {
           ))}
         </tbody>
       </table>
+
+      {totalPages > 1 && (
+        <nav aria-label="Submissions pagination">
+          <ul className="pagination justify-content-center">
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+              <button 
+                className="page-link" 
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+            </li>
+            
+            {getPageNumbers().map(pageNumber => (
+              <li 
+                key={pageNumber} 
+                className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}
+              >
+                <button 
+                  className="page-link" 
+                  onClick={() => handlePageChange(pageNumber)}
+                >
+                  {pageNumber}
+                </button>
+              </li>
+            ))}
+            
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+              <button 
+                className="page-link" 
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+          
+          <div className="text-center mt-2">
+            <small className="text-muted">
+              Showing {startIndex + 1} to {Math.min(endIndex, submissions.length)} of {submissions.length} submissions
+            </small>
+          </div>
+        </nav>
+      )}
     </div>
   );
 };
