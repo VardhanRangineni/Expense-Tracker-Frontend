@@ -29,16 +29,16 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           
-          <Route path="/login" element={currRole==="ROLE_ANONYMOUS" ? <Login setRole={setCurrRole}/> : <Navigate to="/dashboard"/>}  />
-          <Route path="/dashboard" element={currRole!=="ROLE_ANONYMOUS" ? <Dashboard currRole={currRole}/> : <Navigate to="/login"/>}/>
+          <Route path="/login" element={localStorage.getItem("role")==="ROLE_ANONYMOUS" ? <Login setRole={setCurrRole}/> : <Navigate to="/dashboard"/>}  />
+          <Route path="/dashboard" element={localStorage.getItem("role")!=="ROLE_ANONYMOUS" ? <Dashboard currRole={currRole}/> : <Navigate to="/login"/>}/>
 
-          <Route path="/add-submission" element={currRole==="ROLE_EMPLOYEE"? <EmployeeHome/> : <Navigate to="/login"/>} />
-          <Route path="/my-submissions" element={currRole==="ROLE_EMPLOYEE"? <MySubmissions/> : <Navigate to="/login"/>} />
-          <Route path="/view-submissions" element={currRole==="ROLE_MANAGER"? <ViewSubmissions/> : <Navigate to="/login"/>} />
+          <Route path="/add-submission" element={localStorage.getItem("role")==="ROLE_EMPLOYEE"? <EmployeeHome/> : <Navigate to="/login"/>} />
+          <Route path="/my-submissions" element={localStorage.getItem("role")==="ROLE_EMPLOYEE"? <MySubmissions/> : <Navigate to="/login"/>} />
+          <Route path="/view-submissions" element={localStorage.getItem("role")==="ROLE_MANAGER"? <ViewSubmissions/> : <Navigate to="/login"/>} />
 
 
-          <Route path="/add-member" element={currRole==="ROLE_ADMIN"? <AddMember/> : <Navigate to="/login"/>} />
-          <Route path="/view-members" element={currRole==="ROLE_ADMIN"? <ViewMembers/> : <Navigate to="/login"/>} />
+          <Route path="/add-member" element={localStorage.getItem("role")==="ROLE_ADMIN"? <AddMember/> : <Navigate to="/login"/>} />
+          <Route path="/view-members" element={localStorage.getItem("role")==="ROLE_ADMIN"? <ViewMembers/> : <Navigate to="/login"/>} />
           <Route path="/*" element={<Navigate to="/dashboard" />} />
           
         </Routes>

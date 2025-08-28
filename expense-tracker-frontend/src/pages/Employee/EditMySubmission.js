@@ -17,9 +17,7 @@ const EditMySubmission = ({currentSubmission,onClose}) =>{
             setFormData(currentSubmission);
             const fetchData = async () => {
                 try {
-                    const username = localStorage.getItem("username");
-                    const password = localStorage.getItem("password");
-                    const res = await fetchCategories(username, password);
+                    const res = await fetchCategories();
                     setCategories(res);
                 } catch (error) {
                     alert(error);

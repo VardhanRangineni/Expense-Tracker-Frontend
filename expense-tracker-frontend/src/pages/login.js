@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser, getUser } from "../service/loginService";
+import { loginUser } from "../service/loginService";
 
 export default function Login({ setRole }) {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -18,14 +18,8 @@ export default function Login({ setRole }) {
       console.log(data);
       const role = data.role;
 
-      localStorage.setItem("username", formData.username);
-      localStorage.setItem("password", formData.password);
       localStorage.setItem("role", role);
 
-      // Add: fetch user details and save userId to localStorage
-      const userDetails = await getUser(formData.username, formData.password);
-      localStorage.setItem("userId", userDetails.id);
-      localStorage.setItem("managerId", userDetails.manager_id);
       console.log("User Logged in with role : " + role);
       setRole(role);
       navigate('/dashboard');

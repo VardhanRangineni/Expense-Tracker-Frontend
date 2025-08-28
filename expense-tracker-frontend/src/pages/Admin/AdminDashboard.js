@@ -235,7 +235,7 @@ const AdminDashboard = () => {
               </select>
             </div>
             <div className="col-md-2">
-              <button className="btn btn-primary" onClick={handleDownloadReport}>Donwload Report</button>
+              <button className="btn btn-primary" onClick={handleDownloadReport}>Download Report</button>
             </div>
           </div>
 

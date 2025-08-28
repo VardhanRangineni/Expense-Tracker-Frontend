@@ -5,7 +5,6 @@ import { getUser } from "../../service/loginService";
 function AddSubmission() {
     
     const [categories,setCategories] = useState([])
-    const [dataCollected , setDataCollected] = useState(false);
     const [currDate,setCurrDate] = useState(new Date().getDate());
     
 
@@ -36,20 +35,6 @@ function AddSubmission() {
         fetchData();
     }, []);
 
-    useEffect(()=>{
-        if(dataCollected){
-            addExpense(formData)
-                        .then((res)=>alert(res.message))
-                        .catch(e=>alert(e))
-        }
-        setFormData({
-            categoryId: '',
-            amount: 0,
-            description:'',
-            receiptUrl:''
-        })
-        setDataCollected(false);
-    },[dataCollected])
 
 
     const handleChange = (e) =>{
@@ -63,18 +48,17 @@ function AddSubmission() {
 
     const handleSubmit= async (e)=>{
         e.preventDefault();
-        const username = localStorage.getItem("username");
-        const password = localStorage.getItem("password");
+        addExpense(formData)
+                        .then((res)=>alert(res.message))
+                        .catch(e=>alert(e))
         
-        const userDetails = await getUser(username,password);
-
-        setFormData(prev => ({
-            ...prev,
-            managerId: userDetails.manager_id,
-            employeeId : userDetails.id
-        }));
-
-        setDataCollected(true);
+        setFormData({
+            categoryId: '',
+            amount: 0,
+            description:'',
+            receiptUrl:'',
+            date:''
+        })
     }
     
 
