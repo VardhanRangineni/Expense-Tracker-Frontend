@@ -1,10 +1,15 @@
+import {getCreds} from '../utils/authUtil';
+
+const {username,password} = getCreds();
+
 const baseURL = "http://localhost:8080";
 
-export const fetchAllManagers = async () => {
-    
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
 
+export const fetchAllManagers = async () => {
+    //TODO: remove redundancy
+    // const username = localStorage.getItem("username");
+    // const password = localStorage.getItem("password");
+    console.log("TRying to get managers with creds:" + username + " " + password);
     const response = await fetch(`${baseURL}/api/admin/get-managers`, {
         method: "GET",
         headers: {

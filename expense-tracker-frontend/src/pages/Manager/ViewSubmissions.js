@@ -44,7 +44,7 @@ const ManagerSubmissions = () => {
       setCurrentSubmissions(submissions);
     }
 
-  },[statusFilter])
+  },[statusFilter,submissions])
 
   const handleRemarksChange = (expenseId, value) => {
     setRemarksMap(prev => ({ ...prev, [expenseId]: value }));
@@ -75,7 +75,7 @@ const ManagerSubmissions = () => {
       alert(res.message);
       
       fetchTeamSubmissions(username, password, managerId, null)
-        .then((data) => setSubmissions(data))
+        .then((data) => {console.log("Trying to fetch and load data"+data);setSubmissions(data);})
         .catch((e) => console.log(e));
     } catch (err) {
       alert(err.message);
