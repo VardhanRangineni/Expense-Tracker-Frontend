@@ -1,14 +1,14 @@
 const baseURL = "http://localhost:8080";
 
-export const fetchTeamSubmissions = async (username, password, status) => {
+export const fetchTeamSubmissions = async (status) => {
     let url = `${baseURL}/api/manager/expenses`;
     if (status) {
         url += `?status=${encodeURIComponent(status)}`;
     }
     const response = await fetch(url, {
         method: "GET",
+        credentials:"include",
         headers: {
-            "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json",
         },
     });
@@ -18,11 +18,11 @@ export const fetchTeamSubmissions = async (username, password, status) => {
     return await response.json();
 };
 
-export const updateExpenseStatus = async (username, password, expenseId, status, expense) => {
+export const updateExpenseStatus = async ( expenseId, status, expense) => {
     const response = await fetch(`${baseURL}/api/manager/expenses/${expenseId}/${status.toLowerCase()}`, {
         method: "PUT",
+        credentials:"include",
         headers: {
-            "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json",
         },
         body: JSON.stringify(expense),

@@ -29,9 +29,9 @@ const ManagerDashboard = () => {
       try {
         const [approvedAmounts, employeeList, categoryApproved] =
           await Promise.all([
-            fetchApprovedAmounts(username, password, managerId),
-            fetchEmployeeList(username, password, managerId),
-            fetchCategoryWiseApproved(username, password, managerId),
+            fetchApprovedAmounts(),
+            fetchEmployeeList(),
+            fetchCategoryWiseApproved(),
           ]);
 
         const totalAmount = approvedAmounts.reduce(

@@ -19,7 +19,8 @@ const AddMember = ()=>{
                     .catch((err)=>console.log(err));
         }
         loadManagers();
-    })
+    },[])
+
     const handleChange=(e)=>{
         const { name, value } = e.target;
         if(name == "role_id" ){

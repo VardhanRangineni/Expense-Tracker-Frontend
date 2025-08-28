@@ -1,10 +1,10 @@
 const baseURL = "http://localhost:8080";
 
-export const fetchApprovedAmounts = async (username, password) => {
+export const fetchApprovedAmounts = async () => {
     const response = await fetch(`${baseURL}/api/manager/expenses/approvedAmounts`, {
         method: "GET",
+        credentials:"include",
         headers: {
-            Authorization: "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json",
         },
     });
@@ -14,11 +14,11 @@ export const fetchApprovedAmounts = async (username, password) => {
     return await response.json();
 };
 
-export const fetchEmployeeList = async (username, password) => {
+export const fetchEmployeeList = async () => {
     const response = await fetch(`${baseURL}/api/manager/expenses/employeeList`, {
         method: "GET",
+        credentials:"include",
         headers: {
-            Authorization: "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json",
         },
     });
@@ -28,11 +28,11 @@ export const fetchEmployeeList = async (username, password) => {
     return await response.json();
 };
 
-export const fetchCategoryWiseApproved = async (username, password) => {
+export const fetchCategoryWiseApproved = async () => {
     const response = await fetch(`${baseURL}/api/manager/expenses/categoryWiseApproved`, {
         method: "GET",
+        credentials:"include",
         headers: {
-            Authorization: "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json",
         },
     });

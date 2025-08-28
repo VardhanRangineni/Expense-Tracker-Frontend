@@ -1,20 +1,12 @@
-import {getCreds} from '../utils/authUtil';
-
-const {username,password} = getCreds();
-
 const baseURL = "http://localhost:8080";
 
 
 export const fetchAllManagers = async () => {
-    //TODO: remove redundancy
-    // const username = localStorage.getItem("username");
-    // const password = localStorage.getItem("password");
-    console.log("TRying to get managers with creds:" + username + " " + password);
     const response = await fetch(`${baseURL}/api/admin/get-managers`, {
         method: "GET",
+        credentials:"include",
         headers: {
-        "Authorization": "Basic " + btoa(`${username}:${password}`),
-        "Content-Type": "application/json"
+            "Content-Type": "application/json"
         }
     });
     if (!response.ok) {
@@ -25,13 +17,11 @@ export const fetchAllManagers = async () => {
 
 
 export const addNewUser = async (user) =>{
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
     
     const response = await fetch(baseURL+'/api/admin/add-user' , {
         method: "POST",
+        credentials:"include",
         headers: {
-            "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json"
         },
         body:JSON.stringify(user)
@@ -46,8 +36,6 @@ export const addNewUser = async (user) =>{
 
 
 export const fetchExpenses = async (filters = {}) => {
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
     
     const { employeeId = 0, managerId = 0, categoryId = 0, month = 0 } = filters;
     
@@ -60,8 +48,8 @@ export const fetchExpenses = async (filters = {}) => {
 
     const response = await fetch(`${baseURL}/api/admin/expenses?${queryParams}`, {
         method: "GET",
+        credentials:"include",
         headers: {
-            "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json"
         },
         
@@ -77,13 +65,10 @@ export const fetchExpenses = async (filters = {}) => {
 
 
 export const fetchEmployees = async (filters = {}) => {
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
-
     const response = await fetch(`${baseURL}/api/admin/employees?`, {
         method: "GET",
+        credentials:"include",
         headers: {
-            "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json"
         }
     });
@@ -97,13 +82,10 @@ export const fetchEmployees = async (filters = {}) => {
 
 
 export const fetchTotalExpense = async () => {
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
-
     const response = await fetch(`${baseURL}/api/admin/get-total-expense`, {
         method: "GET",
+        credentials:"include",
         headers: {
-            "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json"
         }
     });
@@ -115,13 +97,10 @@ export const fetchTotalExpense = async () => {
 };
 
 export const fetchTotalExpensePerCategory = async () => {
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
-
     const response = await fetch(`${baseURL}/api/admin/get-expense-per-category`, {
         method: "GET",
+        credentials:"include",
         headers: {
-            "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json"
         }
     });

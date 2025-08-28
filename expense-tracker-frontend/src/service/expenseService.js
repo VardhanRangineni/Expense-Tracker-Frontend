@@ -1,13 +1,11 @@
 const baseURL = "http://localhost:8080"
 
 export const fetchCategories = async () =>{
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
     const response = await fetch(baseURL+'/api/expenses/categories' , {
         method: "GET",
+        credentials:"include",
         headers: {
-        "Authorization": "Basic " + btoa(`${username}:${password}`),
-        "Content-Type": "application/json"
+            "Content-Type": "application/json"
         }
     });
     
@@ -18,14 +16,11 @@ export const fetchCategories = async () =>{
 }
 
 export const addExpense = async (formData) =>{
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
-    
-    console.log("Trying to add expense:" +JSON.stringify(formData));
+
     const response = await fetch(baseURL+'/api/employee/addexpense' , {
         method: "POST",
+        credentials:"include",
         headers: {
-            "Authorization": "Basic " + btoa(`${username}:${password}`),
             "Content-Type": "application/json"
         },
         body:JSON.stringify(formData)

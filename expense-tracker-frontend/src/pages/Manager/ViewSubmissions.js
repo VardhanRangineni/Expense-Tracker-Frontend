@@ -7,15 +7,14 @@ const ManagerSubmissions = () => {
   const [loading, setLoading] = useState(true);
   const [currentSubmissions , setCurrentSubmissions] = useState([]);
   const [statusFilter,setStatusFilter] = useState("");
-  const username = localStorage.getItem("username");
-  const password = localStorage.getItem("password");
+
   const managerId = localStorage.getItem("userId");
 
   useEffect(() => {
     const loadSubmissions = async () => {
       setLoading(true);
       try {
-        const data = await fetchTeamSubmissions(username, password, managerId, null);
+        const data = await fetchTeamSubmissions();
         setSubmissions(data);
         setCurrentSubmissions(data);
         const initRemarks = {};
@@ -70,11 +69,11 @@ const ManagerSubmissions = () => {
         remarks: remark,
         managerId: parseInt(managerId),
       };
-      const res = await updateExpenseStatus(username, password, expense.id, status, updatedExpense);
+      const res = await updateExpenseStatus(expense.id, status, updatedExpense);
 
       alert(res.message);
       
-      fetchTeamSubmissions(username, password, managerId, null)
+      fetchTeamSubmissions()
         .then((data) => {console.log("Trying to fetch and load data"+data);setSubmissions(data);})
         .catch((e) => console.log(e));
     } catch (err) {

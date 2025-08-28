@@ -15,11 +15,7 @@ function MySubmissions() {
   useEffect(() => { 
     const fetchSubs = async () => {
       try {
-        const username = localStorage.getItem("username");
-        const password = localStorage.getItem("password");
-
-        const res = await fetchMySubmissions(username, password);
-
+        const res = await fetchMySubmissions();
         setSubmissions(res);
       } catch (error) {
         alert(error);

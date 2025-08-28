@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import {  NavLink, useNavigate } from 'react-router-dom';
+import { logout } from '../../service/loginService';
+import Cookies from 'js-cookie';
 
 const Header = ({role,setRole}) => {
   const navigate = useNavigate();
@@ -10,11 +12,13 @@ const Header = ({role,setRole}) => {
     setRole(currentRole);
   },[navigate])
  
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     localStorage.clear()
     localStorage.setItem("role","ROLE_ANONYMOUS")
-   
-    setRole("ROLE_ANONYMOUS")
+    
+    await logout();
+
+    setRole("ROLE_ANONYMOUS");
     navigate('/login')
   }
 
@@ -30,8 +34,6 @@ const Header = ({role,setRole}) => {
       
       'ADD MEMBER': '/add-member',
       'VIEW MEMBERS':'/view-members',
-      
-      
     };
     return paths[item];
   };

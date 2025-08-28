@@ -150,7 +150,7 @@ const AdminDashboard = () => {
           <div className="card h-100">
             <div className="card-body text-center d-flex flex-column justify-content-center">
               <h4>Total EXPENSE for {monthAndYear}</h4>
-              <h2>₹{totalExpense}</h2>
+              <h2>₹{totalExpense.toLocaleString()}</h2>
             </div>
           </div>
         </div>

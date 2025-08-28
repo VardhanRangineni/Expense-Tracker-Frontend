@@ -2,17 +2,15 @@ const baseURL = "http://localhost:8080";
 
 export const fetchCategorySpendByMonth = async () => {
     
-
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
+    //REMOVE userid fromhere and fetch it in the backend with auth context;s
     const employeeId = localStorage.getItem("userId");
 
     const response = await fetch(
         `${baseURL}/api/employee/get-expense-per-category/${employeeId}`,
         {
             method: "GET",
+            credentials:"include",
             headers: {
-                Authorization: "Basic " + btoa(`${username}:${password}`),
                 "Content-Type": "application/json",
             },
         }
