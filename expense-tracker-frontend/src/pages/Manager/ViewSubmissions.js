@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchTeamSubmissions, updateExpenseStatus } from "../../service/viewsubmissionsService";
+import { downloadExcel} from "react-export-table-to-excel";
 
 const ManagerSubmissions = () => {
   const [submissions, setSubmissions] = useState([]);
@@ -47,6 +48,19 @@ const ManagerSubmissions = () => {
 
   const handleRemarksChange = (expenseId, value) => {
     setRemarksMap(prev => ({ ...prev, [expenseId]: value }));
+  };
+
+  const handleDownloadExcel = () => {
+    const table = document.getElementById("submissionsTable");
+    const header = ["Expense Id","Employee Id","Category Id","Date","Status","Amount","Description","Remark","Employee Name","Category","receipt URL "];
+    downloadExcel({
+      fileName: "submissions",
+      sheet: "Submissions",
+      tablePayload:{
+        header,
+        body: currentSubmissions
+      },
+    });
   };
 
   const handleUpdateStatus = async (sub, status) => {
@@ -102,6 +116,11 @@ const ManagerSubmissions = () => {
               </select>
             </div>
       </div>
+      
+          <div className="col-md-2">
+              <button className="btn btn-primary mb-3" onClick={handleDownloadExcel}>Download Report</button>
+          </div>
+
       <table className="table table-striped">
         <thead className="table-dark">
           <tr>
