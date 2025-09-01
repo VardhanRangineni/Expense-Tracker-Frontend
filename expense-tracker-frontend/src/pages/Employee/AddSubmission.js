@@ -1,6 +1,5 @@
 import { useState,useEffect } from "react";
 import {addExpense, fetchCategories} from "../../service/expenseService";
-import { getUser } from "../../service/loginService";
 
 function AddSubmission() {
     
@@ -100,7 +99,7 @@ function AddSubmission() {
                         name="date" 
                         id="date" 
                         value={formData.date} 
-                        max={new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split("T")[0]}
+                        max={new Date(date.getFullYear(), date.getMonth(), 29).toISOString().split("T")[0]}
                         min={new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split("T")[0]}
                         onChange={handleChange}
                         className="form-control"
