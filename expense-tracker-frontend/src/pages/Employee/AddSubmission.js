@@ -60,8 +60,10 @@ function AddSubmission() {
             date:''
         })
     }
-    
 
+
+    
+    const date = new Date();
     return (
     <div>
         <form onSubmit={handleSubmit} className="container mt-5" style={{ maxWidth: '400px' }}>
@@ -91,8 +93,29 @@ function AddSubmission() {
             </div>
 
             <div className="mb-3">
-                <label htmlFor="date" className="form-label">Date</label>
-                <input type="date" name="date" id="date" value={formData.date} max={new Date().toISOString().split("T")[0]} onChange={handleChange} className="form-control"/>
+                <label htmlFor="date" className="form-label">{formData.categoryId === "4" ? <span>Subscription Start Date , Must be this month</span> : <span>Date</span>}</label>
+                {formData.categoryId === "4" ? 
+                    <input 
+                        type="date" 
+                        name="date" 
+                        id="date" 
+                        value={formData.date} 
+                        max={new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split("T")[0]}
+                        min={new Date(date.getFullYear(), date.getMonth(), 2).toISOString().split("T")[0]}
+                        onChange={handleChange}
+                        className="form-control"
+                    />
+                    :
+                    <input 
+                        type="date" 
+                        name="date" 
+                        id="date" 
+                        value={formData.date} 
+                        max={date.toISOString().split("T")[0]} 
+                        onChange={handleChange} 
+                        className="form-control"
+                    />
+                }
             </div>
             <div className="mb-3">
                 <label htmlFor="description" className="form-label">Description</label>
