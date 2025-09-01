@@ -15,7 +15,7 @@ export const fetchApprovedAmounts = async () => {
 };
 
 export const fetchEmployeeList = async () => {
-    const response = await fetch(`${baseURL}/api/manager/expenses/employeeList`, {
+    const response = await fetch(`${baseURL}/api/manager/expenses/employees`, {
         method: "GET",
         credentials:"include",
         headers: {

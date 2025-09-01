@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchTeamSubmissions, updateExpenseStatus } from "../../service/viewsubmissionsService";
-import { downloadExcel} from "react-export-table-to-excel";
+import { downloadExcel } from "react-export-table-to-excel";
 
 const ManagerSubmissions = () => {
   const [submissions, setSubmissions] = useState([]);
   const [remarksMap, setRemarksMap] = useState({});
   const [loading, setLoading] = useState(true);
-  const [currentSubmissions , setCurrentSubmissions] = useState([]);
-  const [statusFilter,setStatusFilter] = useState("");
+  const [currentSubmissions, setCurrentSubmissions] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const managerId = localStorage.getItem("userId");
 
@@ -28,35 +29,29 @@ const ManagerSubmissions = () => {
       }
       setLoading(false);
     };
-    
+
     loadSubmissions();
   }, []);
 
-
-  useEffect(()=>{
-    console.log("This has been triggered")
-    
-    if(statusFilter !== ""){
-      setCurrentSubmissions(submissions.filter((sub)=>{
-        return sub.status === statusFilter;
-      }))
-    }else{
+  useEffect(() => {
+    if (statusFilter !== "") {
+      setCurrentSubmissions(submissions.filter((sub) => sub.status === statusFilter));
+    } else {
       setCurrentSubmissions(submissions);
     }
-
-  },[statusFilter,submissions])
+    setSelectedIds([]); // Reset selection on filter change
+  }, [statusFilter, submissions]);
 
   const handleRemarksChange = (expenseId, value) => {
     setRemarksMap(prev => ({ ...prev, [expenseId]: value }));
   };
 
   const handleDownloadExcel = () => {
-    const table = document.getElementById("submissionsTable");
-    const header = ["Expense Id","Employee Id","Category Id","Date","Status","Amount","Description","Remark","Employee Name","Category","receipt URL "];
+    const header = ["Expense Id", "Employee Id", "Category Id", "Date", "Status", "Amount", "Description", "Remark", "Employee Name", "Category", "receipt URL "];
     downloadExcel({
       fileName: "submissions",
       sheet: "Submissions",
-      tablePayload:{
+      tablePayload: {
         header,
         body: currentSubmissions
       },
@@ -86,44 +81,104 @@ const ManagerSubmissions = () => {
       const res = await updateExpenseStatus(expense.id, status, updatedExpense);
 
       alert(res.message);
-      
+
       fetchTeamSubmissions()
-        .then((data) => {console.log("Trying to fetch and load data"+data);setSubmissions(data);})
+        .then((data) => { setSubmissions(data); })
         .catch((e) => console.log(e));
     } catch (err) {
       alert(err.message);
     }
   };
 
+  // Multi-select handlers
+  const handleSelect = (id) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(currentSubmissions.filter(sub => sub.status === "PENDING").map(sub => sub.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleApproveSelected = async () => {
+    if (selectedIds.length === 0) {
+      alert("No submissions selected.");
+      return;
+    }
+    for (const id of selectedIds) {
+      const sub = currentSubmissions.find(s => s.id === id);
+      if (sub) {
+        let remark = remarksMap[sub.id] || "NO REMARK";
+        const updatedExpense = {
+          ...sub,
+          remarks: remark,
+          managerId: parseInt(managerId),
+        };
+        try {
+          await updateExpenseStatus(sub.id, "APPROVE", updatedExpense);
+        } catch (err) {
+          alert(`Error approving submission ${sub.id}: ${err.message}`);
+        }
+      }
+    }
+    alert("Selected submissions approved.");
+    fetchTeamSubmissions()
+      .then((data) => { setSubmissions(data); })
+      .catch((e) => console.log(e));
+    setSelectedIds([]);
+  };
+
   if (loading) return <div>Loading...</div>;
-  
 
   return (
     <div className="container mt-3">
       <h3>Team Expense Submissions</h3>
       <div className="row mb-3">
         <div className="col-md-3">
-              <select
-                className="form-select"
-                name="Status"
-                value={statusFilter}
-                onChange={(e)=>setStatusFilter(e.target.value)}
-              >
-                <option value="">Any Status</option>
-                <option value="APPROVED">Approved</option>
-                <option value="REJECTED">Rejected</option>
-                <option value="PENDING">Pending</option>
-              </select>
-            </div>
+          <select
+            className="form-select"
+            name="Status"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="">Any Status</option>
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+            <option value="PENDING">Pending</option>
+          </select>
+        </div>
+        <div className="col-md-2">
+          <button className="btn btn-primary mb-3" onClick={handleDownloadExcel}>Download Report</button>
+        </div>
+        <div className="col-md-2">
+          <button
+            className="btn btn-success mb-3"
+            onClick={handleApproveSelected}
+            disabled={selectedIds.length === 0}
+          >
+            Approve Selected
+          </button>
+        </div>
       </div>
-      
-          <div className="col-md-2">
-              <button className="btn btn-primary mb-3" onClick={handleDownloadExcel}>Download Report</button>
-          </div>
 
       <table className="table table-striped">
         <thead className="table-dark">
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                checked={
+                  currentSubmissions.filter(sub => sub.status === "PENDING").length > 0 &&
+                  selectedIds.length === currentSubmissions.filter(sub => sub.status === "PENDING").length
+                }
+                onChange={handleSelectAll}
+              />
+            </th>
             <th>Description</th>
             <th>Category</th>
             <th>Amount</th>
@@ -138,18 +193,27 @@ const ManagerSubmissions = () => {
         <tbody>
           {currentSubmissions?.map(sub => (
             <tr key={sub.id}>
+              <td>
+                {sub.status === "PENDING" && (
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(sub.id)}
+                    onChange={() => handleSelect(sub.id)}
+                  />
+                )}
+              </td>
               <td>{sub.description}</td>
               <td>{sub.categoryName || sub.categoryId}</td>
               <td>{sub.amount}</td>
               <td>{sub.date}</td>
               <td>
                 <span className={`badge ${
-                        sub.status === 'APPROVED' ? 'bg-success' :
-                        sub.status === 'REJECTED' ? 'bg-danger' :
-                        'bg-warning'
-                      }`}>
-                    {sub.status}
-                  </span>
+                  sub.status === 'APPROVED' ? 'bg-success' :
+                  sub.status === 'REJECTED' ? 'bg-danger' :
+                  'bg-warning'
+                }`}>
+                  {sub.status}
+                </span>
               </td>
               <td>{sub.employeeName || sub.employeeId}</td>
               <td>
@@ -179,24 +243,22 @@ const ManagerSubmissions = () => {
                     >
                       Reject
                     </button>
-                  
                   </>
                 ) : (
                   "-"
                 )}
               </td>
               <td>
-                    {sub.receiptUrl==="" || sub.receiptUrl===null?(
-                      <span>No Reciept</span>
-                    ):(
-                      <a target="_blank" href={sub.receiptUrl}>Reciept</a>
-                    )}
-                  </td>
+                {sub.receiptUrl === "" || sub.receiptUrl === null ? (
+                  <span>No Reciept</span>
+                ) : (
+                  <a target="_blank" rel="noopener noreferrer" href={sub.receiptUrl}>Reciept</a>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-
     </div>
   );
 };

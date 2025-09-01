@@ -33,6 +33,7 @@ const ManagerDashboard = () => {
             fetchEmployeeList(),
             fetchCategoryWiseApproved(),
           ]);
+          console.log(employeeList)
 
         const totalAmount = approvedAmounts.reduce(
           (sum, expense) => sum + expense.amount,
@@ -75,7 +76,7 @@ const ManagerDashboard = () => {
           "rgba(255, 99, 132, 1)",
           "rgba(255, 206, 86, 1)",
         ],
-        borderWidth: 1,
+        borderWidth: 1
       },
     ],
   };
@@ -143,9 +144,9 @@ const ManagerDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {employeeData?.employees?.map((employeeName, index) => (
+                    {employeeData?.employees?.map((username, index) => (
                       <tr key={index}>
-                        <td>{employeeName}</td>
+                        <td>{username}</td>
                       </tr>
                     ))}
                   </tbody>
