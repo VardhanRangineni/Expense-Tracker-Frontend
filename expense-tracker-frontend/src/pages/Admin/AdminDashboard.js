@@ -54,7 +54,7 @@ const AdminDashboard = () => {
         setCategories(categoriesData);
 
         const totalExpenseData = await fetchTotalExpense();
-        setTotalExpense(totalExpenseData.totalExpense);
+        totalExpense!==null ? setTotalExpense(0) : setTotalExpense(totalExpenseData.totalExpense);
 
         const expensePerCategoryData = await fetchTotalExpensePerCategory();
         setExpenseForCategory(expensePerCategoryData);
