@@ -10,13 +10,25 @@ function MySubmissions() {
   const [editingSubmission, setEditingSubmission] = useState({});
   
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(15);
+  
+
+   var totalPages = Math.ceil(submissions.length / itemsPerPage);
+    var startIndex = (currentPage - 1) * itemsPerPage;
+    var endIndex = startIndex + itemsPerPage;
+    var currentSubmissions = submissions.slice(startIndex, endIndex);
 
   useEffect(() => { 
     const fetchSubs = async () => {
+      console.log("Trying to refetch the submissions")
       try {
         const res = await fetchMySubmissions();
         setSubmissions(res);
+        totalPages = Math.ceil(submissions.length / itemsPerPage);
+        startIndex = (currentPage - 1) * itemsPerPage;
+        endIndex = startIndex + itemsPerPage;
+        currentSubmissions = submissions.slice(startIndex, endIndex);
+
       } catch (error) {
         alert(error);
       } finally {
@@ -40,16 +52,12 @@ function MySubmissions() {
     setIsDeleting(true);
 
     deleteMySubmissoin(expense)
-                      .then((res)=> alert(res.message))
-                      .then(()=>{setIsDeleting(false)})
-                      .catch((e)=> alert("Could not delete that expense..."));
+        .then((res)=> alert(res.message))
+        .then(()=>{setIsDeleting(false)})
+        .catch((e)=> alert("Could not delete that expense..."));
   }
 
-  const totalPages = Math.ceil(submissions.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentSubmissions = submissions.slice(startIndex, endIndex);
-
+ 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
