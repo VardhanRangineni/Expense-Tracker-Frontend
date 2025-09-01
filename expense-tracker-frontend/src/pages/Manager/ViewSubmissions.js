@@ -39,7 +39,7 @@ const ManagerSubmissions = () => {
     } else {
       setCurrentSubmissions(submissions);
     }
-    setSelectedIds([]); // Reset selection on filter change
+    setSelectedIds([]);
   }, [statusFilter, submissions]);
 
   const handleRemarksChange = (expenseId, value) => {
@@ -90,7 +90,6 @@ const ManagerSubmissions = () => {
     }
   };
 
-  // Multi-select handlers
   const handleSelect = (id) => {
     setSelectedIds(prev =>
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]

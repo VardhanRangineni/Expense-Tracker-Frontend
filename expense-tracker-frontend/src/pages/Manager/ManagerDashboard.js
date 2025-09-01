@@ -33,12 +33,24 @@ const ManagerDashboard = () => {
             fetchEmployeeList(),
             fetchCategoryWiseApproved(),
           ]);
-          console.log(employeeList)
+        console.log(employeeList);
 
-        const totalAmount = approvedAmounts.reduce(
-          (sum, expense) => sum + expense.amount,
-          0
-        );
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        const totalAmount = approvedAmounts
+          .filter((expense) => {
+            const dateStr =
+              expense?.approvedDate ||
+              expense?.approvedOn ||
+              expense?.date ||
+              expense?.createdAt;
+            const d = dateStr ? new Date(dateStr) : null;
+            return d && !isNaN(d) && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+          })
+          .reduce((sum, expense) => sum + (Number(expense.amount) || 0), 0);
+
         setTotalApprovedAmount(totalAmount);
 
         setEmployeeData(employeeList);
@@ -50,7 +62,7 @@ const ManagerDashboard = () => {
       setLoading(false);
     };
 
-    loadDashboardData();
+    loadDashboardData(); 
   }, [username, password, managerId]);
 
   if (loading) return <div className="text-center mt-4">Loading...</div>;
@@ -70,13 +82,15 @@ const ManagerDashboard = () => {
           "rgba(54, 162, 235, 0.6)",
           "rgba(255, 99, 132, 0.6)",
           "rgba(255, 206, 86, 0.6)",
+          "rgba(75, 192, 192, 0.6)",
         ],
         borderColor: [
           "rgba(54, 162, 235, 1)",
           "rgba(255, 99, 132, 1)",
           "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
         ],
-        borderWidth: 1
+        borderWidth: 1,
       },
     ],
   };
