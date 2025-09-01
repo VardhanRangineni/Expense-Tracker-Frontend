@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import {  NavLink, useNavigate } from 'react-router-dom';
 import { logout } from '../../service/loginService';
-import Cookies from 'js-cookie';
 
 const Header = ({role,setRole}) => {
   const navigate = useNavigate();
