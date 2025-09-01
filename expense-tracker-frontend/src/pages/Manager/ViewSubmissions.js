@@ -8,8 +8,13 @@ const ManagerSubmissions = () => {
   const [loading, setLoading] = useState(true);
   const [currentSubmissions, setCurrentSubmissions] = useState([]);
   const [statusFilter, setStatusFilter] = useState("");
-  const [selectedIds, setSelectedIds] = useState([]);
 
+  const [monthFilter, setMonthFilter] = useState(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  });
+
+  const [selectedIds, setSelectedIds] = useState([]);
   const managerId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -18,7 +23,6 @@ const ManagerSubmissions = () => {
       try {
         const data = await fetchTeamSubmissions();
         setSubmissions(data);
-        setCurrentSubmissions(data);
         const initRemarks = {};
         data.forEach(item => {
           initRemarks[item.id] = item.remarks || "";
@@ -33,14 +37,29 @@ const ManagerSubmissions = () => {
     loadSubmissions();
   }, []);
 
-  useEffect(() => {
-    if (statusFilter !== "") {
-      setCurrentSubmissions(submissions.filter((sub) => sub.status === statusFilter));
-    } else {
-      setCurrentSubmissions(submissions);
+  const toMonthKey = (dateStr) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    if (!Number.isNaN(d.getTime())) {
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     }
+    return String(dateStr).slice(0, 7);
+  };
+
+  useEffect(() => {
+    let filtered = submissions;
+
+    if (statusFilter !== "") {
+      filtered = filtered.filter((sub) => sub.status === statusFilter);
+    }
+
+    if (monthFilter) {
+      filtered = filtered.filter((sub) => toMonthKey(sub.date) === monthFilter);
+    }
+
+    setCurrentSubmissions(filtered);
     setSelectedIds([]);
-  }, [statusFilter, submissions]);
+  }, [statusFilter, monthFilter, submissions]);
 
   const handleRemarksChange = (expenseId, value) => {
     setRemarksMap(prev => ({ ...prev, [expenseId]: value }));
@@ -151,6 +170,16 @@ const ManagerSubmissions = () => {
             <option value="PENDING">Pending</option>
           </select>
         </div>
+
+        <div className="col-md-3">
+          <input
+            type="month"
+            className="form-control"
+            value={monthFilter}
+            onChange={(e) => setMonthFilter(e.target.value)}
+          />
+        </div>
+
         <div className="col-md-2">
           <button className="btn btn-primary mb-3" onClick={handleDownloadExcel}>Download Report</button>
         </div>
